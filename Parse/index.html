@@ -10,7 +10,48 @@
     <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
     </script>
+    <script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
     <script type="text/javascript">
+      Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+      var Hotspots = Parse.Object.extend("Hotspots");
+      // User's location
+      if(navigator.geolocation)
+      {
+        navigator.geolocation.getCurrentPosition(successFunction,errorFunction);
+      }
+      else{
+        alert('Error: Fuck you');
+      }
+      
+      function errorFunction(position)
+      {
+        alert('No');
+      }
+      function successFunction(position)
+      {
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+        var point = new Parse.GeoPoint({latitude: lat, longitude: long});
+        var query = new Parse.Query(Hotspots);
+        // Interested in locations near user.
+        query.near("location", userGeoPoint);
+        // Limit what could be a lot of points.
+        query.limit(10);
+        //var query = new Parse.Query(Hotspots);
+        //query.equalTo("Name","Joe's Stupid Wifi");
+        query.find({
+          success: function(results) {
+            alert("Successfully retrieved " + results.length + " hotspots.");
+          },
+          error: function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+      }
+      
+      //var userGeoPoint = userObject.get("location");
+      // Create a query for places
+      
       function initialize() {
         var mapOptions = {
           center: new google.maps.LatLng(42.046389, -87.694722),
@@ -19,6 +60,13 @@
         };
         var map = new google.maps.Map(document.getElementById("map_canvas"),
             mapOptions);
+        var image = 'images/marker.png';
+        var myLatLng = new google.maps.LatLng(42.046389, -87.694722);
+        var evanstonMarker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            icon: image
+        });
       }
     </script>
   </head>
