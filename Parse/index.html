@@ -52,15 +52,14 @@
                 map: map,
                 icon: image
               });
-              alert("Location " + myLatLng);
             }
-            alert("Successfully retrieved " + results.length + " hotspots.");
           },
           error: function(error) {
             alert("Error: " + error.code + " " + error.message);
           }
         });
       }
+      
       function successFunction(position)
       {
         var mapOptions = {
@@ -75,12 +74,12 @@
         var long = position.coords.longitude;
         var point = new Parse.GeoPoint({latitude: lat, longitude: long});
         var query = new Parse.Query(Hotspots);
+        
         // Interested in locations near user.
         query.near("Location", point);
-        // Limit what could be a lot of points.
+        
+        // Limit what could be a lot of points. Change later to respond to user input.
         query.limit(10);
-        //var query = new Parse.Query(Hotspots);
-        //query.equalTo("Name","Joe's Stupid Wifi");
         query.find({
           success: function(results) {
             for (x=0;x<results.length;x++)
@@ -91,18 +90,13 @@
                 map: map,
                 icon: image
               });
-              alert("Location " + myLatLng);
             }
-            alert("Successfully retrieved " + results.length + " hotspots.");
           },
           error: function(error) {
             alert("Error: " + error.code + " " + error.message);
           }
         });
       }
-      
-      //var userGeoPoint = userObject.get("location");
-      // Create a query for places
       
       function initialize() {
         var mapOptions = {
