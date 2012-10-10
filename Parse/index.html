@@ -20,21 +20,24 @@
         navigator.geolocation.getCurrentPosition(successFunction,errorFunction);
       }
       else{
-        alert('Error: Fuck you');
+        alert('Error: No location');
       }
       
       function errorFunction(position)
       {
         alert('No');
-      }
-      function successFunction(position)
-      {
-        var lat = position.coords.latitude;
-        var long = position.coords.longitude;
-        var point = new Parse.GeoPoint({latitude: lat, longitude: long});
+        var mapOptions = {
+          center: new google.maps.LatLng(42.046389, -87.694722),
+          zoom: 14,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"),
+            mapOptions);
+        var image = 'images/marker.png';
+        var point = new Parse.GeoPoint({latitude: 42.046399, longitude: -87.694752});
         var query = new Parse.Query(Hotspots);
         // Interested in locations near user.
-        query.near("location", userGeoPoint);
+        query.near("Location", point);
         // Limit what could be a lot of points.
         query.limit(10);
         //var query = new Parse.Query(Hotspots);
@@ -43,12 +46,52 @@
           success: function(results) {
             for (x=0;x<results.length;x++)
             {
-              var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longtidude);
+              var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longitude);
               var evanstonMarker = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
                 icon: image
+              });
+              alert("Location " + myLatLng);
+            }
+            alert("Successfully retrieved " + results.length + " hotspots.");
+          },
+          error: function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
         });
+      }
+      function successFunction(position)
+      {
+        var mapOptions = {
+          center: new google.maps.LatLng(42.046389, -87.694722),
+          zoom: 14,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"),
+            mapOptions);
+        var image = 'images/marker.png';
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+        var point = new Parse.GeoPoint({latitude: lat, longitude: long});
+        var query = new Parse.Query(Hotspots);
+        // Interested in locations near user.
+        query.near("Location", point);
+        // Limit what could be a lot of points.
+        query.limit(10);
+        //var query = new Parse.Query(Hotspots);
+        //query.equalTo("Name","Joe's Stupid Wifi");
+        query.find({
+          success: function(results) {
+            for (x=0;x<results.length;x++)
+            {
+              var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longitude);
+              var evanstonMarker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                icon: image
+              });
+              alert("Location " + myLatLng);
             }
             alert("Successfully retrieved " + results.length + " hotspots.");
           },
