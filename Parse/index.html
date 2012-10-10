@@ -41,7 +41,7 @@
         //query.equalTo("Name","Joe's Stupid Wifi");
         query.find({
           success: function(results) {
-            for (int x=0;x<results.length;x++)
+            for (x=0;x<results.length;x++)
             {
               var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longtidude);
               var evanstonMarker = new google.maps.Marker({
