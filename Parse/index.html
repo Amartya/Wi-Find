@@ -13,7 +13,7 @@
       var mapOptions;
       var map;
       
-      function initializeMap()
+      function initializeMap(position)
       {
         var lat;
         var long;
@@ -74,14 +74,14 @@
         var Hotspots = Parse.Object.extend("Hotspots");
         if(navigator.geolocation)
         {
-          navigator.geolocation.getCurrentPosition(successFunction,errorFunction);
+          navigator.geolocation.getCurrentPosition(intializeMap,errorFunction);
           gotLocation = true;
         }
         else{
           gotLocation = false;
           alert('Error: No location');
+          initalizeMap(null);
         }
-        initializeMap();
       }
 
     </script>
