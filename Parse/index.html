@@ -90,8 +90,22 @@
               var evanstonMarker = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
-                icon: image
+                icon: image,
+                title:'testPop'
               });
+              var infowindow = new google.maps.InfoWindow({
+                  content: contentString
+              });
+
+
+              var contentString = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
+
+
+
+              google.maps.event.addListener(evanstonMarker, 'click', function() {
+                  infowindow.open(map,evanstonMarker);
+              });
+
             }
           },
           error: function(error) {
@@ -115,7 +129,10 @@
             map: map,
             icon: image
         });
+
+        
       }
+
     </script>
   </head>
   <body onload="initialize()">
