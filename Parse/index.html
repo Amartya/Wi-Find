@@ -9,36 +9,37 @@
     </script>
     <script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
     <script type="text/javascript">
-      Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
-      var Hotspots = Parse.Object.extend("Hotspots");
-      // User's location
-      if(navigator.geolocation)
-      {
-        navigator.geolocation.getCurrentPosition(successFunction,errorFunction);
-      }
-      else{
-        alert('Error: No location');
-      }
+      var gotLocation = true;
+      var mapOptions;
+      var map;
       
-      function errorFunction(position)
+      function initializeMap()
       {
-        alert('No');
-        var mapOptions = {
-          center: new google.maps.LatLng(42.046389, -87.694722),
-          zoom: 14,
+        var lat;
+        var long;
+        if(gotLocation)
+        {
+          lat = position.coords.latitude;
+          long = position.coords.longitude;
+        }
+        else
+        {
+          lat = 42.046389;
+          long = -87.694722;
+        }
+          
+        mapOptions = {
+          center: new google.maps.LatLng(lat, long),
+          zoom: 8,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        var map = new google.maps.Map(document.getElementById("map_canvas"),
-            mapOptions);
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
         var image = 'images/marker.png';
-        var point = new Parse.GeoPoint({latitude: 42.046399, longitude: -87.694752});
+        var point = new Parse.GeoPoint({latitude: lat, longitude: long});
         var query = new Parse.Query(Hotspots);
-        // Interested in locations near user.
+        
         query.near("Location", point);
-        // Limit what could be a lot of points.
         query.limit(10);
-        //var query = new Parse.Query(Hotspots);
-        //query.equalTo("Name","Joe's Stupid Wifi");
         query.find({
           success: function(results) {
             for (x=0;x<results.length;x++)
@@ -57,75 +58,30 @@
         });
       }
       
+      function errorFunction(position)
+      {
+        alert('Browser does not support location data');
+        //using Evanston location as center of map
+      }
+      
       function successFunction(position)
       {
-        var mapOptions = {
-          center: new google.maps.LatLng(42.046389, -87.694722),
-          zoom: 14,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"),
-            mapOptions);
-        var image = 'images/marker.png';
-        var lat = position.coords.latitude;
-        var long = position.coords.longitude;
-        var point = new Parse.GeoPoint({latitude: lat, longitude: long});
-        var query = new Parse.Query(Hotspots);
-        
-        // Interested in locations near user.
-        query.near("Location", point);
-        
-        // Limit what could be a lot of points. Change later to respond to user input.
-        query.limit(10);
-        query.find({
-          success: function(results) {
-            for (x=0;x<results.length;x++)
-            {
-              var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longitude);
-              var evanstonMarker = new google.maps.Marker({
-                position: myLatLng,
-                map: map,
-                icon: image,
-                title:'testPop'
-              });
-              var infowindow = new google.maps.InfoWindow({
-                  content: contentString
-              });
-
-
-              var contentString = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
-
-
-
-              google.maps.event.addListener(evanstonMarker, 'click', function() {
-                  infowindow.open(map,evanstonMarker);
-              });
-
-            }
-          },
-          error: function(error) {
-            alert("Error: " + error.code + " " + error.message);
-          }
-        });
+        //worked
       }
       
       function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(42.046389, -87.694722),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"),
-            mapOptions);
-        var image = 'images/marker.png';
-        var myLatLng = new google.maps.LatLng(42.046389, -87.694722);
-        var evanstonMarker = new google.maps.Marker({
-            position: myLatLng,
-            map: map,
-            icon: image
-        });
-
-        
+        Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+        var Hotspots = Parse.Object.extend("Hotspots");
+        if(navigator.geolocation)
+        {
+          navigator.geolocation.getCurrentPosition(successFunction,errorFunction);
+          gotLocation = true;
+        }
+        else{
+          gotLocation = false;
+          alert('Error: No location');
+        }
+        initializeMap();
       }
 
     </script>
