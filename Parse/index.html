@@ -61,6 +61,8 @@
       function errorFunction(position)
       {
         alert('Browser does not support location data');
+        gotLocation = false;
+        initializeMap(position);
         //using Evanston location as center of map
       }
       
@@ -74,13 +76,11 @@
         var Hotspots = Parse.Object.extend("Hotspots");
         if(navigator.geolocation)
         {
-          navigator.geolocation.getCurrentPosition(intializeMap,errorFunction);
+          navigator.geolocation.getCurrentPosition(initializeMap,errorFunction);
           gotLocation = true;
         }
         else{
-          gotLocation = false;
           alert('Error: No location');
-          initalizeMap(null);
         }
       }
 
