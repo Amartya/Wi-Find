@@ -13,6 +13,8 @@
       var Hotspots;
       var mapOptions;
       var map;
+      var markers;
+      var infoWindows;
       
       function initializeMap(position)
       {
@@ -46,12 +48,28 @@
             for (x=0;x<results.length;x++)
             {
               var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longitude);
-              var evanstonMarker = new google.maps.Marker({
+              markers[x] = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
-                icon: image
+                icon: image,
+                title: results[x].get("Name")
               });
+              var contentString = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
+              
+              var infoWindow = new google.maps.InfoWindow({
+                  content: contentString
+              });
+              google.maps.event.addListener(markers[x], 'click', function() {
+                  infoWindow.open(map,markers[x]);
+              }); 
             }
+            //for (y=0;y<markers.length;y++)
+            //{
+             // google.maps.event.addListener(markers[y], 'click', function() {
+               //   var tempInfoWindow = infoWindows[y];
+                 // tempInfoWindow.open(map,markers[y]);
+              //}); 
+            //}
           },
           error: function(error) {
             alert("Error: " + error.code + " " + error.message);
@@ -75,6 +93,8 @@
       function initialize() {
         Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
         Hotspots = Parse.Object.extend("Hotspots");
+        markers = new Array();
+        infoWindows = new Array();
         if(navigator.geolocation)
         {
           navigator.geolocation.getCurrentPosition(initializeMap,errorFunction);
