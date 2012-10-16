@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>Wi-Find</title>
+    <title>Wi-Find</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" />
     <script type="text/javascript"
@@ -9,67 +9,62 @@
     </script>
     <script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
     <script type="text/javascript">
-      var gotLocation = true;
+      //Global variables
+      //Flags and Parse constants
+      var gotLocation = false;
       var Hotspots;
+      
+      //Map related globals
       var mapOptions;
       var map;
-      var markers;
-      var infoWindows;
+      var markers = new Array();
+      var infoWindows = new Array();
       
       function initializeMap(position)
       {
-        var lat;
-        var long;
+        var curLat;
+        var curLong;
         if(gotLocation)
         {
-          lat = position.coords.latitude;
-          long = position.coords.longitude;
+          curLat = position.coords.latitude;
+          curLong = position.coords.longitude;
         }
         else
         {
-          lat = 42.046389;
-          long = -87.694722;
+          curLat = 42.046389;
+          curLong = -87.694722;
         }
-          
-        mapOptions = {
-          center: new google.maps.LatLng(lat, long),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
+
+        mapOptions = {center: new google.maps.LatLng(curLat, curLong),zoom: 14,mapTypeId: google.maps.MapTypeId.ROADMAP};
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
         var image = 'images/marker.png';
-        var point = new Parse.GeoPoint({latitude: lat, longitude: long});
-        var query = new Parse.Query(Hotspots);
         
+        //Creating Parse GeoPoint variable and setting up the query to fetch nearest 10 points
+        var point = new Parse.GeoPoint({latitude: curLat, longitude: curLong});
+        var query = new Parse.Query(Hotspots);
         query.near("Location", point);
         query.limit(10);
+        
+        //This is the select clause of the query. If successful, for each resutl, draw a marker
         query.find({
           success: function(results) {
             for (x=0;x<results.length;x++)
             {
               var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longitude);
+
+              var contentString = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
+              infoWindows[x] = new google.maps.InfoWindow({content: contentString});
+
               markers[x] = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
                 icon: image,
                 title: results[x].get("Name")
               });
-              var contentString = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
-              
-              var infoWindow = new google.maps.InfoWindow({
-                  content: contentString
-              });
-              google.maps.event.addListener(markers[x], 'click', function() {
-                  infoWindow.open(map,markers[x]);
-              }); 
+
+              //Attaching event listeners to each marker
+              markerClickListener(markers[x],x);
             }
-            //for (y=0;y<markers.length;y++)
-            //{
-             // google.maps.event.addListener(markers[y], 'click', function() {
-               //   var tempInfoWindow = infoWindows[y];
-                 // tempInfoWindow.open(map,markers[y]);
-              //}); 
-            //}
           },
           error: function(error) {
             alert("Error: " + error.code + " " + error.message);
@@ -77,24 +72,25 @@
         });
       }
       
-      function errorFunction(position)
+      function markerClickListener (marker, position)
+      {   
+          google.maps.event.addListener(marker, 'click', function() {
+                infoWindows[position].open(map, marker);
+          });
+      }
+
+      function errorFunction()
       {
         alert('Browser does not support location data');
         gotLocation = false;
-        initializeMap(position);
+        initializeMap();
         //using Evanston location as center of map
-      }
-      
-      function successFunction(position)
-      {
-        //worked
       }
       
       function initialize() {
         Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
         Hotspots = Parse.Object.extend("Hotspots");
-        markers = new Array();
-        infoWindows = new Array();
+
         if(navigator.geolocation)
         {
           navigator.geolocation.getCurrentPosition(initializeMap,errorFunction);
@@ -104,9 +100,10 @@
           alert('Error: No location');
         }
       }
-
     </script>
   </head>
+
+  <!--HTML BODY -->
   <body onload="initialize()">
     <div id="map_canvas" style="width:100%; height:100%"></div>
   </body>
