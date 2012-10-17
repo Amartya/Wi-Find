@@ -7,6 +7,40 @@
 	<link rel="stylesheet" href="css/colors.css">
   <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+  <script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
+  	<script>	 
+	 // Global declarations - assignments made in $(document).ready() below
+    var name = "name1";
+    var cost = 30;
+    var location2 = "dsf";
+    var bandwidth = 3;
+
+function storeData()
+{	
+alert("fdsa");
+      name = $('#Name');
+      cost = $('#Cost');
+      location2 = $('#Location');
+	   bandwidth = $('#Bandwidth');
+	   	 $('#buttonOK').click(function() {
+		 alter("1")
+		 	Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+    var Hotspots = Parse.Object.extend("Hotspots");
+	var hotspots=new Hotspots();
+	hotspots.set("Name",name);
+	hotspots.set("Cost",cost);
+	hotspots.set("Location",location);
+	hotspots.save(null,{
+		success: function(hotspots){
+		},
+		error: function(hotspots,error){
+		}
+		});
+    
+    });
+	
+}	
+</script>
 </head> 
 <body> 
 
@@ -51,7 +85,9 @@
 	
   <div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">	
 	 <div>Please fill in all required fields before submitting the form.</div>
-	 <a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true">OK</a>
+	 <a id="buttonOK" name="buttonOK" onclick="storeData()"  data-role="button" data-inline="true">OK
+	 
+	</a>
 	</div>	<!-- contentDialog -->
 	
   <!-- contentTransition is displayed after the form is submitted until a response is received back. -->
@@ -73,6 +109,8 @@
 	<div data-role="footer" id="ftrConfirmation" name="ftrConfirmation"></div> 
 	
 <!-- Page ends here -->
+
+
 </body>
 </html>
 
