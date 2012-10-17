@@ -1,0 +1,79 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>Have wi-fi Form</title> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+	<link rel="stylesheet" href="css/colors.css">
+  <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+</head> 
+<body> 
+
+<!-- Page starts here -->
+<div data-role="page" data-theme="b" id="page1">
+
+	<div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
+		<h1>Have Wi-fi</h1>
+	</div>
+
+	<div data-role="content" id="contentMain" name="contentMain">	
+	
+	<form id="form1">
+	
+	<div id="Name" data-role="fieldcontain">
+		<label for="Name">Name*</label>		
+		<input id="Name" name="Name" type="text" />
+	</div>
+
+	<div id="Cost" data-role="fieldcontain">
+		<label for="Cost" id="Cost" name="Cost">Cost*</label>		
+		<input id="Cost" name="Cost" type="text" />
+	</div>
+	
+  <div id="Location" data-role="fieldcontain">
+		<label for="Location">Location*</label>		
+		<input id="Location" name="Location" type="text" />
+	</div>
+	
+  <div id="Bandwidth" data-role="fieldcontain">
+		<label for="Bandwidth">Bandwidth*</label>		
+		<input id="Bandwidth" name="Bandwidth" type="text" />
+	</div>
+	
+<div id="submitDiv" data-role="fieldcontain">    
+  	 <input type="submit" value="Submit" data-inline="true"/>
+    </div>
+    </form>
+	</div><!-- contentMain -->
+  
+	<div data-role="footer" id="ftrMain" name="ftrMain"></div>
+	
+  <div align="CENTER" data-role="content" id="contentDialog" name="contentDialog">	
+	 <div>Please fill in all required fields before submitting the form.</div>
+	 <a id="buttonOK" name="buttonOK" href="#page1" data-role="button" data-inline="true">OK</a>
+	</div>	<!-- contentDialog -->
+	
+  <!-- contentTransition is displayed after the form is submitted until a response is received back. -->
+	<div data-role="content" id="contentTransition" name="contentTransition">	
+	 <div align="CENTER"><h4></h4></div>
+	 
+	</div>	<!-- contentTransition -->
+	
+	<!-- Although stored within page1 div tag, hdrConfirmation, contentConfirmation and ftrConfirmation represent a self contained 'confirmation page' -->
+	<div data-role="header"  id="hdrConfirmation" name="hdrConfirmation" data-nobackbtn="true">
+		<h1></h1>
+	</div>
+	
+	<div data-role="content" id="contentConfirmation" name="contentConfirmation" align="center">	
+  	<p></p> 
+    <p> <span id="confirmation" name="confirmation"></span>  </p>
+	</div><!-- contentConfirmation -->	
+  	
+	<div data-role="footer" id="ftrConfirmation" name="ftrConfirmation"></div> 
+	
+<!-- Page ends here -->
+</body>
+</html>
+
+	 
