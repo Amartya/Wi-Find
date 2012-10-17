@@ -55,19 +55,20 @@
 <body onload="initialize()">
 	<div data-role="page">
 
-		<div data-role="header">
+		<div data-role="header" data-theme="b">
 			<h1>Wi-Find</h1>
 		</div><!-- /header -->
 	
 		<div data-role="content">	
-			<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a">
+			<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
 				<li data-role="list-divider">Places</li>
-				<li><a href="map.html">I Have</a></li>
+				<li><a href="map.html" data-transition="slide">I Have</a></li>
 				<li><a href="http://google.com" data-transition="slide">I Want</a></li>
 			</ul>
 		</div><!-- /content -->
 	
-		<div data-role="footer">
+		<div data-role="footer" data-theme="b">
+			<h3>Disclaimer</h3>
 		</div>
 
 </div><!-- /page -->
