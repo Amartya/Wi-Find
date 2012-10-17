@@ -18,8 +18,8 @@
       var mapOptions;
       var map;
       var markers = new Array();
-      var infoWindows = new Array();
 
+      //InfoWindow related vars
       var singleInfoWindow = new google.maps.InfoWindow();
       var contentStringArr = new Array();
       
@@ -54,12 +54,10 @@
             for (x=0;x<results.length;x++)
             {
               var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longitude);
-
-              var contentString = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
-              contentStringArr[x] = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
               
-              // Since we want only 1 info window open at a time, no need for an array.
-              //infoWindows[x] = new google.maps.InfoWindow();
+              //Get data for x-th Wi-Fi location from Parse
+              contentStringArr[x] = "<b>" + "Bandwidth: " + "</b>" + results[x].get("Bandwidth") + 
+                                 "<br>" + "<b>" + "Name: "+  "</b>" + results[x].get("Name");
 
               markers[x] = new google.maps.Marker({
                 position: myLatLng,
@@ -93,7 +91,6 @@
         alert('Browser does not support location data');
         gotLocation = false;
         initializeMap();
-        //using Evanston location as center of map
       }
       
       function initialize() {
