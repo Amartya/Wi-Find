@@ -1,119 +1,76 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Wi-Find</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" />
-    <script type="text/javascript"
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Wi-Find</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	   <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
     </script>
-    <script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
-    <script type="text/javascript">
-      //Global variables
-      //Flags and Parse constants
-      var gotLocation = false;
-      var Hotspots;
-      
-      //Map related globals
-      var mapOptions;
-      var map;
-      var markers = new Array();
-      var infoWindows = new Array();
-
-      var singleInfoWindow = new google.maps.InfoWindow();
-      var contentStringArr = new Array();
-      
-      function initializeMap(position)
-      {
-        var curLat;
-        var curLong;
-        if(gotLocation)
+	<script type="text/javascript">
+		var gotLocation;
+		function initializeMap(position)
+		{
+			var curLat;
+			var curLong;
+	        if(gotLocation)
+	        {
+	          curLat = position.coords.latitude;
+	          curLong = position.coords.longitude;
+	        }
+	        else
+	        {
+	          curLat = 42.046389;
+	          curLong = -87.694722;
+	        }
+	        mapOptions = {center: new google.maps.LatLng(curLat, curLong),zoom: 14,mapTypeId: google.maps.MapTypeId.ROADMAP};
+	        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        }
+		       
+        function errorFunction()
         {
-          curLat = position.coords.latitude;
-          curLong = position.coords.longitude;
-        }
-        else
-        {
-          curLat = 42.046389;
-          curLong = -87.694722;
-        }
-
-        mapOptions = {center: new google.maps.LatLng(curLat, curLong),zoom: 14,mapTypeId: google.maps.MapTypeId.ROADMAP};
-        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-        var image = 'images/marker.png';
-        
-        //Creating Parse GeoPoint variable and setting up the query to fetch nearest 10 points
-        var point = new Parse.GeoPoint({latitude: curLat, longitude: curLong});
-        var query = new Parse.Query(Hotspots);
-        query.near("Location", point);
-        query.limit(10);
-        
-        //This is the select clause of the query. If successful, for each resutl, draw a marker
-        query.find({
-          success: function(results) {
-            for (x=0;x<results.length;x++)
-            {
-              var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longitude);
-
-              var contentString = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
-              contentStringArr[x] = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
-              
-              // Since we want only 1 info window open at a time, no need for an array.
-              //infoWindows[x] = new google.maps.InfoWindow();
-
-              markers[x] = new google.maps.Marker({
-                position: myLatLng,
-                map: map,
-                icon: image,
-                draggable:false,
-                animation: google.maps.Animation.DROP,
-                title: results[x].get("Name")
-              });
-
-              //Attaching event listeners to each marker
-              markerClickListener(markers[x],x);
-            }
-          },
-          error: function(error) {
-            alert("Error: " + error.code + " " + error.message);
-          }
-        });
-      }
+	        alert('Browser does not support location data');
+	        gotLocation = false;
+	        initializeMap();
+	        //using Evanston location as center of map
+	    }
       
-      function markerClickListener (marker, position)
-      {   
-          google.maps.event.addListener(marker, 'click', function() {
-                singleInfoWindow.setContent(contentStringArr[position]);
-                singleInfoWindow.open(map, marker);
-          });
-      }
+	    function initialize()
+	    {
+	        if(navigator.geolocation)
+	        {
+	          navigator.geolocation.getCurrentPosition(initializeMap,errorFunction);
+	          gotLocation = true;
+	        }
+	        else{
+	          alert('Error: No location');
+	        }
+		}
+	</script>
+</head>
 
-      function errorFunction()
-      {
-        alert('Browser does not support location data');
-        gotLocation = false;
-        initializeMap();
-        //using Evanston location as center of map
-      }
-      
-      function initialize() {
-        Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
-        Hotspots = Parse.Object.extend("Hotspots");
 
-        if(navigator.geolocation)
-        {
-          navigator.geolocation.getCurrentPosition(initializeMap,errorFunction);
-          gotLocation = true;
-        }
-        else{
-          alert('Error: No location');
-        }
-      }
-    </script>
-  </head>
+<body onload="initialize()">
+	<div data-role="page">
 
-  <!--HTML BODY -->
-  <body onload="initialize()">
-    <div id="map_canvas" style="width:100%; height:100%"></div>
-  </body>
+		<div data-role="header">
+			<h1>Wi-Find</h1>
+		</div><!-- /header -->
+	
+		<div data-role="content">	
+			<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a">
+				<li data-role="list-divider">Places</li>
+				<li><a href="map.html">I Have</a></li>
+				<li><a href="http://google.com" data-transition="slide">I Want</a></li>
+			</ul>
+		</div><!-- /content -->
+	
+		<div data-role="footer">
+		</div>
+
+</div><!-- /page -->
+
+</body>
 </html>
