@@ -19,6 +19,9 @@
       var map;
       var markers = new Array();
       var infoWindows = new Array();
+
+      var singleInfoWindow = new google.maps.InfoWindow();
+      var contentStringArr = new Array();
       
       function initializeMap(position)
       {
@@ -53,12 +56,17 @@
               var myLatLng = new google.maps.LatLng(results[x].get("Location").latitude, results[x].get("Location").longitude);
 
               var contentString = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
-              infoWindows[x] = new google.maps.InfoWindow({content: contentString});
+              contentStringArr[x] = "Bandwidth: " + results[x].get("Bandwidth") + ", Name: "+ results[x].get("Name");
+              
+              // Since we want only 1 info window open at a time, no need for an array.
+              //infoWindows[x] = new google.maps.InfoWindow();
 
               markers[x] = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
                 icon: image,
+                draggable:false,
+                animation: google.maps.Animation.DROP,
                 title: results[x].get("Name")
               });
 
@@ -75,7 +83,8 @@
       function markerClickListener (marker, position)
       {   
           google.maps.event.addListener(marker, 'click', function() {
-                infoWindows[position].open(map, marker);
+                singleInfoWindow.setContent(contentStringArr[position]);
+                singleInfoWindow.open(map, marker);
           });
       }
 
