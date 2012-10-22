@@ -3,78 +3,113 @@
 	<head> 
 		<title>Share Wi-Fi</title> 
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
-		<link rel="stylesheet" href="css/colors.css">
-		<script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 		<script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
-	  	<script type="text/javascript">	 
-			function storeData()
-			{	
-				var name=document.getElementById("Name").value;
-				var cost=(document.getElementById("Cost").value)*1;
-				var location2=document.getElementById("Location").value;
-				var bandwidth=(document.getElementById("Bandwidth").value)*1;
-				//store data in parse
-		        Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+	  	<script >	
+      		var curLat;
+	        var curLong; 
+	        var gotLocation = false;
 
-    			var Hotspots = Parse.Object.extend("Hotspots");
+	        function GetLocation(){
+			    if(navigator.geolocation)
+        		{
+		        	navigator.geolocation.getCurrentPosition(SetLocation,ErrorFunction);
+		        	gotLocation = true;
+        		}
+	        }
+
+	        function ErrorFunction()
+	      	{
+		        alert('Browser does not support location data');
+		        gotLocation = false;
+		        initializeMap();
+	      	}
+
+  			function SetLocation(position)
+	      	{		        
+		        if(gotLocation)
+		        {
+		          curLat = position.coords.latitude;
+		          curLong = position.coords.longitude;
+		        }
+		        else
+		        {
+		          curLat = 42.046389;
+		          curLong = -87.694722;
+		        }
+
+		    }
+
+			$(function() {
+				$("input[type=submit], a, button" )
+		            .button()
+		            .click(function( event ) {
+	                event.preventDefault();
+					
+					//Storing current location as location of Wi-Fi
+					var point = new Parse.GeoPoint(curLat, curLong);
+
+					//Getting the rest of the information from the form
+					var name=document.getElementById("Name").value;
+					var cost=(document.getElementById("Cost").value)*1;
+					var bandwidth=(document.getElementById("Bandwidth").value)*1;
+					//store data in parse
+		        	Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
     			
+    				var Hotspots = Parse.Object.extend("Hotspots");
+					var hotspots=new Hotspots();
+					hotspots.set("Name",name);
+					hotspots.set("Cost",cost);
+					hotspots.set("Location",point);
+					hotspots.set("Bandwidth",bandwidth);
 
-				var hotspots=new Hotspots();
-				hotspots.set("Name",name);
-				hotspots.set("Cost",cost);
-				//hotspots.set("Location",location2);
-				hotspots.set("Bandwidth",bandwidth);
-
-				hotspots.save(null,{
-					success: function(hotspots){
-						alert("Data stored successfully on Wi-Find");
-					},
-					error: function(hotspots,error){
-						alert("Failed to save information on Wi-Find");
-					}
-				});
-			}	
+					//Saving to parse
+					hotspots.save(null,{
+						success: function(hotspots){
+							alert("Data stored successfully on Wi-Find");
+						},
+						error: function(hotspots,error){
+							alert("Failed to save information on Wi-Find");
+						}
+					});
+	            });//End of click function
+			});	
 		</script>
 	</head> 
 	
-	<body> 
-		<div data-role="page" data-theme="b" id="page1">
-
-			<div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
-				<h1>Have Wi-fi</h1>
-			</div>
-
+	<body onload="GetLocation()"> 
+		<div data-role="page" data-theme="b" id="page1" data-theme="a" >
+			<div data-role="header" data-theme="a" style="height:35px;">
+				<h1>Share Wi-Fi</h1>
+			</div><!-- /header -->
+			
 			<div data-role="content" id="contentMain" name="contentMain">	
-			
-			<form id="form1">
-			
-			<div id="div1" data-role="fieldcontain">
-				<label for="Name">Name*</label>		
-				<input id="Name" name="Name" type="text" value=""/>
-			</div>
+				<form id="form1">
+					<div id="div1" data-role="fieldcontain">
+						<label for="Name">Name*</label>		
+						<input id="Name" name="Name" type="text" value=""/>
+					</div>
 
-			<div id="div2" data-role="fieldcontain">
-				<label for="Cost" >Cost*</label>		
-				<input id="Cost" name="Cost" type="text" />
+					<div id="div2" data-role="fieldcontain">
+						<label for="Cost" >Cost*</label>		
+						<input id="Cost" name="Cost" type="text" />
+					</div>
+					
+					<div id="div4" data-role="fieldcontain">
+						<label for="Bandwidth">Bandwidth*</label>		
+						<input id="Bandwidth" name="Bandwidth" type="text" />
+					</div>
+					<h6>*Current Location will be used as the location for the Shared Wi-Fi </h6>
+					<input type="submit" value="Share" data-theme="a" />			
+			    	
+			    </form>
 			</div>
 			
-			<div id="div3" data-role="fieldcontain">
-				<label for="Location">Location*</label>		
-				<input id="Location" name="Location" type="text" />
-			</div>
-			
-			<div id="div4" data-role="fieldcontain">
-				<label for="Bandwidth">Bandwidth*</label>		
-				<input id="Bandwidth" name="Bandwidth" type="text" />
-			</div>
-		    </form>
-			
-			<div id="div5" data-role="fieldcontain">
-				<button type="button" onclick="storeData()" style="width: 20px; height: 60px;">submit</button>
-			</div>
-			
+			<div class="footer" data-role="footer" data-theme="a" >
+			&copy; 2012 Wi-Find Alpha.
+			</div><!-- /footer -->
 		</div>
 	</body>
 </html>

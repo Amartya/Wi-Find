@@ -7,72 +7,46 @@
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-	   <script type="text/javascript"
+    <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
     </script>
+    <script type="text/javascript" src="js/jquery.ui.map.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 	<script type="text/javascript">
-		var gotLocation;
-		function initializeMap(position)
-		{
-			var curLat;
-			var curLong;
-	        if(gotLocation)
-	        {
-	          curLat = position.coords.latitude;
-	          curLong = position.coords.longitude;
-	        }
-	        else
-	        {
-	          curLat = 42.046389;
-	          curLong = -87.694722;
-	        }
-	        mapOptions = {center: new google.maps.LatLng(curLat, curLong),zoom: 14,mapTypeId: google.maps.MapTypeId.ROADMAP};
-	        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-        }
-		       
-        function errorFunction()
-        {
-	        alert('Browser does not support location data');
-	        gotLocation = false;
-	        initializeMap();
-	        //using Evanston location as center of map
-	    }
-      
-	    function initialize()
-	    {
-	        if(navigator.geolocation)
-	        {
-	          navigator.geolocation.getCurrentPosition(initializeMap,errorFunction);
-	          gotLocation = true;
-	        }
-	        else{
-	          alert('Error: No location');
-	        }
-		}
-	</script>
+	    $(function() { 
+				$('#map_canvas').gmap({'center': '42.046389,-87.694722', 'zoom': 10, 'disableDefaultUI':true, 'callback': function() {
+					var self = this;
+					self.addMarker({'position': this.get('map').getCenter() }).click(function() {
+						self.openInfoWindow({ 'content': 'Hello World!' }, this);
+					});	
+				}});
+		});
+    </script>
 </head>
 
-
-<body onload="initialize()">
-	<div data-role="page">
-
-		<div data-role="header" data-theme="a">
+<body >
+	<div id="home" data-role="page" data-theme="b">
+		<div data-role="header" data-theme="a" style="height:35px;">
 			<h1>Wi-Find</h1>
 		</div><!-- /header -->
-	
+		
+		<div data-role="content">	
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+				<div id="map_canvas" class="map rounded" style="height:150px;"></div>
+			</div>
+		</div><!-- adding the map showing current position of user -->
+
 		<div data-role="content">	
 			<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a">
 				<li data-role="list-divider">What would you like to do?</li>
-				<li><a href="http://nearwi-fi.appspot.com/map.html" data-transition="slide">I'm looking for WiFi</a></li>
-				<li><a href="http://nearwi-fi.appspot.com/havewifi.html" data-transition="slide">I want to share my WiFi</a></li>
+				<li data-theme="c"><a href="map.html" data-ajax="false">I'm looking for WiFi</a></li>
+				<li data-theme="c"><a href="havewifi.html" data-ajax="false">I want to share my WiFi</a></li>
 			</ul>
 		</div><!-- /content -->
-	
-		<div class="footer" data-role="footer" data-theme="a">
-			&copy; 2012 Wi-Find. Use at your own risk.
-		</div>
 
-</div><!-- /page -->
-
+		<div class="footer" data-role="footer" data-theme="a" >
+			<label text-align="center">&copy; 2012 Wi-Find Alpha.</label>
+		</div><!-- /footer -->
+	</div><!-- /page -->
 </body>
 </html>
