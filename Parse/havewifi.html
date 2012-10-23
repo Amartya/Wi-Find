@@ -41,7 +41,16 @@
 		        }
 
 		    }
+<<<<<<< HEAD
 
+=======
+function verfifyEmail(email){
+
+var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+email_Flag = reg.test(email);
+return email_Flag;
+}
+>>>>>>> 17e456476df7a2883260673e38de61ae956a219a
 			$(function() {
 				$("input[type=submit], a, button" )
 		            .button()
@@ -64,8 +73,11 @@
 						return;
 					}*/
 					
-					if(!ValidateEmail(email))
-					alert("1");
+					if(!verfifyEmail(email))
+					{
+						alert("1");
+						return;
+					}
 					else
 					alert("2");
 					
@@ -115,8 +127,13 @@
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
-						<label for="Location">Location*</label>		
+						<label for="Location">Stree Adress*</label>		
 						<input id="Location" name="Location" type="text" value=""/>
+					</div>
+					
+					<div id="div1" data-role="fieldcontain">
+						<label for="Zipcode">zipcode*</label>		
+						<input id="Zipcode" name="Zipcode" type="text" value=""/>
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
