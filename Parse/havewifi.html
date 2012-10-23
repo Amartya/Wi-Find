@@ -7,6 +7,9 @@
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 		<script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
+		<script type="text/javascript"
+			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
+		</script>
 	  	<script >	
       		var curLat;
 	        var curLong; 
@@ -42,6 +45,32 @@
 
 		    }
 
+			function verfifyEmail(email)
+			{
+				var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+				email_Flag = reg.test(email);
+				return email_Flag;
+			}
+
+
+
+/*function showAddress(address) {
+
+var geocoder = new GClientGeocoder();
+
+  geocoder.getLatLng(
+    address,
+    function(point) {
+      if (!point) {
+        alert(address + " not found");
+      } else {
+	  return point;
+      }
+    }
+  );
+}*/
+
+
 			$(function() {
 				$("input[type=submit], a, button" )
 		            .button()
@@ -55,8 +84,35 @@
 					var name=document.getElementById("Name").value;
 					var cost=(document.getElementById("Cost").value)*1;
 					var bandwidth=(document.getElementById("Bandwidth").value)*1;
-					var location=(document.getElementById("Bandwidth").value);
 					var email=(document.getElementById("Email").value);
+					var address=(document.getElementById("Address").value);
+					var zipcode=(document.getElementById("Zipcode").value);
+					
+					/*if(name==""||cost==""||email==""||address==""||zipcode=="")
+					{
+						alert("you have to input all the required information");
+						return;
+					}*/
+					
+					/*if(!verfifyEmail(email))
+					{
+						alert("Email address is not right");
+						return;
+					}*/
+					
+					
+					var geocoder = new GClientGeocoder();
+
+					geocoder.getLatLng(
+					address,
+					function(point) {
+					if (!point) {
+						alert(address + " not found");
+					} else {
+						alert("hello");
+					}
+					}
+					);
 
 					//store data in parse
 		        	Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
@@ -102,8 +158,13 @@
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
-						<label for="Location">Location*</label>		
-						<input id="Location" name="Location" type="text" value=""/>
+						<label for="Address">Street Address*</label>		
+						<input id="Address" name="Address" type="text" value=""/>
+					</div>
+					
+					<div id="div1" data-role="fieldcontain">
+						<label for="Zipcode">Zipcode*</label>		
+						<input id="Zipcode" name="Zipcode" type="text" value=""/>
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
