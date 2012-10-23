@@ -41,7 +41,12 @@
 		        }
 
 		    }
-
+function isEmail(strEmail) {
+if (strEmail.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1)
+return true;
+else
+return false;
+}
 			$(function() {
 				$("input[type=submit], a, button" )
 		            .button()
@@ -55,6 +60,20 @@
 					var name=document.getElementById("Name").value;
 					var cost=(document.getElementById("Cost").value)*1;
 					var bandwidth=(document.getElementById("Bandwidth").value)*1;
+					var email=(document.getElementById("Email").value);
+					var location=(document.getElementById("Location").value);
+					
+					/*if(name==""||cost==""||email==""||location=="")
+					{
+						alert("you have to input all the required information");
+						return;
+					}*/
+					
+					if(!ValidateEmail(email))
+					alert("1");
+					else
+					alert("2");
+					
 					
 					
 					//store data in parse
