@@ -41,11 +41,11 @@
 		        }
 
 		    }
-function isEmail(strEmail) {
-if (strEmail.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) != -1)
-return true;
-else
-return false;
+function verfifyEmail(email){
+
+var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+email_Flag = reg.test(email);
+return email_Flag;
 }
 			$(function() {
 				$("input[type=submit], a, button" )
@@ -69,7 +69,7 @@ return false;
 						return;
 					}*/
 					
-					if(!ValidateEmail(email))
+					if(!verfifyEmail(email))
 					alert("1");
 					else
 					alert("2");
@@ -120,8 +120,13 @@ return false;
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
-						<label for="Location">Location*</label>		
+						<label for="Location">Stree Adress*</label>		
 						<input id="Location" name="Location" type="text" value=""/>
+					</div>
+					
+					<div id="div1" data-role="fieldcontain">
+						<label for="Zipcode">zipcode*</label>		
+						<input id="Zipcode" name="Zipcode" type="text" value=""/>
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
