@@ -11,111 +11,106 @@
 		<script type="text/javascript"
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
 		</script>
-<script type="text/javascript">  
-	
-	var geocoder;
-	
-	function initialize() {  
-		geocoder = new google.maps.Geocoder();  
-	}  
-  
-	function mainFunction() {
-	
-		var name=document.getElementById("Name").value;
-		var cost=(document.getElementById("Cost").value)*1;
-		var bandwidth=(document.getElementById("Bandwidth").value)*1;
-		var email=(document.getElementById("Email").value);
-		var address=(document.getElementById("Address").value);
-		var zipcode=(document.getElementById("Zipcode").value);
-		/*if(name==""||cost==""||email==""||address==""||zipcode=="")
-			{
-				alert("you have to input all the required information");
-				return;
-			}		
-		if(!verfifyEmail(email))
-		{
-			alert("Email address is not right");
-			return;
-		}*/
-	
-		Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
-		var Hotspots = Parse.Object.extend("Hotspots");
-		var hotspots=new Hotspots();
-		var point;
+		<script type="text/javascript">  
+			
+			var geocoder;
+			
+			function initialize() {  
+				geocoder = new google.maps.Geocoder();  
+			}  
+		  
+			function mainFunction() {
+			
+				Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
 				
-		geocoder.geocode( { 'address': address}, function(results, status) {  
-		if (status == google.maps.GeocoderStatus.OK) {
-			point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
-			x=results[0].geometry.location.lat();
-			y=results[0].geometry.location.lng();
-
-		} else {  
-			alert("Geocode was not successful for the following reason: " + status);  
-		}  
-		});  
-
-					//Getting the rest of the information from the form
-					var name=document.getElementById("Name").value;
-					var cost=(document.getElementById("Cost").value)*1;
-					var bandwidth=(document.getElementById("Bandwidth").value)*1;
-					var email=(document.getElementById("Email").value);
-					var address=(document.getElementById("Address").value);
-					var zipcode=(document.getElementById("Zipcode").value);
-					
-					/*if(name==""||cost==""||email==""||address==""||zipcode=="")
+				var Hotspots = Parse.Object.extend("Hotspots");
+				var hotspots=new Hotspots();
+				var point;
+				var x;
+				var y;
+			
+				var name=document.getElementById("Name").value;
+				var cost=(document.getElementById("Cost").value)*1;
+				var bandwidth=(document.getElementById("Bandwidth").value)*1;
+				var email=(document.getElementById("Email").value);
+				var address=(document.getElementById("Address").value);
+				
+				/* Input Validation */
+				/*if(name==""||cost==""||email==""||address==""||zipcode=="")
 					{
-						alert("you have to input all the required information");
+						alert("Please fill out all of the required information.");
 						return;
-					}*/
-					
-					/*if(!verfifyEmail(email))
-					{
-						alert("Email address is not right");
-						return;
-					}*/
-					
-					
-  
-  
- /* function codeAddress() {  
-    var address = document.getElementById("address").value;  
-    geocoder.geocode( { 'address': address}, function(results, status) {  
-      if (status == google.maps.GeocoderStatus.OK) {  
-        alert(results[0].geometry.location);  
-      } else {  
-        alert("Geocode was not successful for the following reason: " + status);  
-      }  
-    });  
-  }*/
-					//store data in parse
-		        	Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
-    			
-    				var Hotspots = Parse.Object.extend("Hotspots");
-					var hotspots=new Hotspots();
-					hotspots.set("Name",name);
-					hotspots.set("Cost",cost);
-					hotspots.set("Location",point);
-					hotspots.set("Address",address);
-					hotspots.set("Bandwidth",bandwidth);
+					}		
+				if(!verfifyEmail(email))
+				{
+					alert("Please enter a valid email address.");
+					return;
+				}*/
+						
+				geocoder.geocode( { 'address': address}, function(results, status) {  
+				if (status == google.maps.GeocoderStatus.OK) {
+					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
 
-		hotspots.save(null,{
-			success: function(hotspots){
-				alert("Data stored successfully on Wi-Find");
-			},
-			error: function(hotspots,error){
-				alert("Failed to save information on Wi-Find");
+					alert(results[0].geometry.location.lat().toString());
+ 					alert(results[0].geometry.location.lng().toString());
+ 					
+ 					x=results[0].geometry.location.lat().toString();
+ 					y=results[0].geometry.location.lng().toString();
+
+				} else {  
+					alert("Geocode was not successful for the following reason: " + status);  
+				}  
+				}); 
+
+				//Getting the rest of the information from the form
+				var name=document.getElementById("Name").value;
+				var cost=(document.getElementById("Cost").value)*1;
+				var bandwidth=(document.getElementById("Bandwidth").value)*1;
+				var email=(document.getElementById("Email").value);
+				var address=(document.getElementById("Address").value);
+				
+			 /* function codeAddress() {  
+			    var address = document.getElementById("address").value;  
+			    geocoder.geocode( { 'address': address}, function(results, status) {  
+			      if (status == google.maps.GeocoderStatus.OK) {  
+			        alert(results[0].geometry.location);  
+			      } else {  
+			        alert("Geocode was not successful for the following reason: " + status);  
+			      }  
+			    });  
+			  }*/
+			  
+				//Store data in parse
+	        	Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+			
+				var Hotspots = Parse.Object.extend("Hotspots");
+				var hotspots=new Hotspots();
+				hotspots.set("Name",name);
+				hotspots.set("Cost",cost);
+				hotspots.set("Location",point);
+				hotspots.set("Address",address);
+				hotspots.set("Bandwidth",bandwidth);
+				hotspots.set("Test1",x);
+				hotspots.set("Test2",y);
+				
+				hotspots.save(null,{
+					success: function(hotspots){
+						alert("Data stored successfully on Wi-Find");
+					},
+					error: function(hotspots,error){
+						alert("Failed to save information on Wi-Find");
+					}
+				});
+			}  
+			
+			function verifyEmail(email)
+			{
+				var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+				email_Flag = reg.test(email);
+				return email_Flag;
 			}
-		});
-	}  
-	
-	function verfifyEmail(email)
-	{
-		var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
-		email_Flag = reg.test(email);
-		return email_Flag;
-	}
 
-</script>  
+		</script>  
 </head>  
 	<body onload="initialize()"> 
 		<div data-role="page" data-theme="b" id="page1" data-theme="a" >
@@ -139,11 +134,6 @@
 					<div id="div1" data-role="fieldcontain">
 						<label for="Address">Street Address*</label>		
 						<input id="Address" name="Address" type="text" value=""/>
-					</div>
-					
-					<div id="div1" data-role="fieldcontain">
-						<label for="Zipcode">Zipcode*</label>		
-						<input id="Zipcode" name="Zipcode" type="text" value=""/>
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
