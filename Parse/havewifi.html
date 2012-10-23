@@ -1,8 +1,9 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-		<title>Share Wi-Fi</title> 
-		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<!DOCTYPE html>  
+<html>  
+<head>  
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>  
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>  
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
@@ -10,73 +11,48 @@
 		<script type="text/javascript"
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
 		</script>
-		
-	  	<script >	
-      		var curLat;
-	        var curLong; 
-	        var gotLocation = false;
-			
-			var geocoder;  
-  function initialize() {  
-    geocoder = new google.maps.Geocoder();  
-  } 
-
-	        /*function GetLocation(){
-				initialize();
-			    if(navigator.geolocation)
-        		{
-		        	navigator.geolocation.getCurrentPosition(SetLocation,ErrorFunction);
-		        	gotLocation = true;
-        		}
-	        }*/
-  function codeAddress() {  
-    var address = document.getElementById("address").value;  
-    geocoder.geocode( { 'address': address}, function(results, status) {  
-      if (status == google.maps.GeocoderStatus.OK) {  
-        alert(results[0].geometry.location);  
-      } else {  
-        alert("Geocode was not successful for the following reason: " + status);  
-      }  
-    });  
-  }
-	        function ErrorFunction()
-	      	{
-		        alert('Browser does not support location data');
-		        gotLocation = false;
-		        initializeMap();
-	      	}
-
-  			function SetLocation(position)
-	      	{		        
-		        if(gotLocation)
-		        {
-		          curLat = position.coords.latitude;
-		          curLong = position.coords.longitude;
-		        }
-		        else
-		        {
-		          curLat = 42.046389;
-		          curLong = -87.694722;
-		        }
-
-		    }
-
-			function verfifyEmail(email)
+<script type="text/javascript">  
+	
+	var geocoder;
+	
+	function initialize() {  
+		geocoder = new google.maps.Geocoder();  
+	}  
+  
+	function mainFunction() {
+	
+		var name=document.getElementById("Name").value;
+		var cost=(document.getElementById("Cost").value)*1;
+		var bandwidth=(document.getElementById("Bandwidth").value)*1;
+		var email=(document.getElementById("Email").value);
+		var address=(document.getElementById("Address").value);
+		var zipcode=(document.getElementById("Zipcode").value);
+		/*if(name==""||cost==""||email==""||address==""||zipcode=="")
 			{
-				var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
-				email_Flag = reg.test(email);
-				return email_Flag;
-			}
+				alert("you have to input all the required information");
+				return;
+			}		
+		if(!verfifyEmail(email))
+		{
+			alert("Email address is not right");
+			return;
+		}*/
+	
+		Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+		var Hotspots = Parse.Object.extend("Hotspots");
+		var hotspots=new Hotspots();
+		var point;
+				
+		geocoder.geocode( { 'address': address}, function(results, status) {  
+		if (status == google.maps.GeocoderStatus.OK) {
+			point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
+			x=results[0].geometry.location.lat();
+			y=results[0].geometry.location.lng();
 
-
-			$(function() {
-				$("input[type=submit], a, button" )
-		            .button()
-		            .click(function( event ) {
-	                event.preventDefault();
-					
-					//Storing current location as location of Wi-Fi
-					var point = new Parse.GeoPoint(curLat, curLong);
+		} else {  
+			alert("Geocode was not successful for the following reason: " + status);  
+		}  
+		});  
 
 					//Getting the rest of the information from the form
 					var name=document.getElementById("Name").value;
@@ -122,20 +98,25 @@
 					hotspots.set("Address",address);
 					hotspots.set("Bandwidth",bandwidth);
 
-					//Saving to parse
-					hotspots.save(null,{
-						success: function(hotspots){
-							alert("Data stored successfully on Wi-Find");
-						},
-						error: function(hotspots,error){
-							alert("Failed to save information on Wi-Find");
-						}
-					});
-	            });//End of click function
-			});	
-		</script>
-	</head> 
+		hotspots.save(null,{
+			success: function(hotspots){
+				alert("Data stored successfully on Wi-Find");
+			},
+			error: function(hotspots,error){
+				alert("Failed to save information on Wi-Find");
+			}
+		});
+	}  
 	
+	function verfifyEmail(email)
+	{
+		var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+		email_Flag = reg.test(email);
+		return email_Flag;
+	}
+
+</script>  
+</head>  
 	<body onload="initialize()"> 
 		<div data-role="page" data-theme="b" id="page1" data-theme="a" >
 			<div data-role="header" data-theme="a" style="height:35px;">
@@ -174,10 +155,9 @@
 						<label for="Bandwidth">Bandwidth</label>		
 						<input id="Bandwidth" name="Bandwidth" type="text" />
 					</div>
-					<h6>*Current Location will be used as the location for the Shared Wi-Fi </h6>
-					<input type="submit" value="Share" data-theme="a" />			
 			    	
-					<input type="button" value="Geocode" onclick="codeAddress()">  
+					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a"/>  
+					
 			    </form>
 			</div>
 			
@@ -186,6 +166,4 @@
 			</div><!-- /footer -->
 		</div>
 	</body>
-</html>
-
-	 
+</html> 
