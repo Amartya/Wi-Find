@@ -64,20 +64,19 @@ return email_Flag;
 					var bandwidth=(document.getElementById("Bandwidth").value)*1;
 					var email=(document.getElementById("Email").value);
 					var location=(document.getElementById("Location").value);
+					var zipcode==(document.getElementById("Zipcode").value);
 					
-					/*if(name==""||cost==""||email==""||location=="")
+					if(name==""||cost==""||email==""||location==""||zipcode=="")
 					{
 						alert("you have to input all the required information");
 						return;
-					}*/
+					}
 					
 					if(!verfifyEmail(email))
 					{
-						alert("1");
+						alert("Email address is not right");
 						return;
 					}
-					else
-					alert("2");
 					
 					
 					
