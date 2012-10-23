@@ -45,11 +45,14 @@
 
 		    }
 
-			function verfifyEmail(email)
+			function verifyEmail(email)
 			{
 				var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
 				email_Flag = reg.test(email);
 				return email_Flag;
+			}
+			function isNumber(n) {
+				return !isNaN(parseFloat(n)) && isFinite(n);
 			}
 
 
