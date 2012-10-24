@@ -22,40 +22,82 @@
 			function initialize() {  
 				geocoder = new google.maps.Geocoder();  
 			}  
-		  					var point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
-					var name=document.getElementById("Name").value;
-					var cost=(document.getElementById("Cost").value)*1;
-					var bandwidth=(document.getElementById("Bandwidth").value)*1;
-					var email=(document.getElementById("Email").value);
-					var address=(document.getElementById("Address").value);
-										
-
-					/* Input Validation */
-					/*if(name==""||cost==""||email==""||address==""||zipcode=="")
+		  
+			function mainFunction() {
+			
+				Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+				
+				var Hotspots = Parse.Object.extend("Hotspots");
+				var hotspots=new Hotspots();
+				var point;
+				var x;
+				var y;
+			
+				var name=document.getElementById("Name").value;
+				var cost=(document.getElementById("Cost").value)*1;
+				var bandwidth=(document.getElementById("Bandwidth").value)*1;
+				var email=(document.getElementById("Email").value);
+				var address=(document.getElementById("Address").value);
+				
+				/* Input Validation */
+				/*if(name==""||cost==""||email==""||address==""||zipcode=="")
 					{
 						alert("Please fill out all of the required information.");
 						return;
 					}		
-					if(!verifyEmail(email))
-					{
-						alert("Please enter a valid email address.");
-						return;
-					}*/
-			function mainFunction() {
-			
+				if(!verfifyEmail(email))
+				{
+					alert("Please enter a valid email address.");
+					return;
+				}*/
+						
 				geocoder.geocode( { 'address': address}, function(results, status) {  
 				if (status == google.maps.GeocoderStatus.OK) {
-					
-					//Store data in parse
-					Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
-					var Hotspots = Parse.Object.extend("Hotspots");
-					var hotspots=new Hotspots();
-					hotspots.set("Name",name);
-					hotspots.set("Cost",cost);
-					hotspots.set("Location",point);
-					hotspots.set("Address",address);
-					hotspots.set("Bandwidth",bandwidth);
-					hotspots.save(null,{
+					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
+
+					alert(results[0].geometry.location.lat().toString());
+ 					alert(results[0].geometry.location.lng().toString());
+ 					
+ 					x=results[0].geometry.location.lat().toString();
+ 					y=results[0].geometry.location.lng().toString();
+
+				} else {  
+					alert("Geocode was not successful for the following reason: " + status);  
+				}  
+				}); 
+
+				//Getting the rest of the information from the form
+				var name=document.getElementById("Name").value;
+				var cost=(document.getElementById("Cost").value)*1;
+				var bandwidth=(document.getElementById("Bandwidth").value)*1;
+				var email=(document.getElementById("Email").value);
+				var address=(document.getElementById("Address").value);
+				
+			 /* function codeAddress() {  
+			    var address = document.getElementById("address").value;  
+			    geocoder.geocode( { 'address': address}, function(results, status) {  
+			      if (status == google.maps.GeocoderStatus.OK) {  
+			        alert(results[0].geometry.location);  
+			      } else {  
+			        alert("Geocode was not successful for the following reason: " + status);  
+			      }  
+			    });  
+			  }*/
+			  
+				//Store data in parse
+	        	Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+			
+				var Hotspots = Parse.Object.extend("Hotspots");
+				var hotspots=new Hotspots();
+				hotspots.set("Name",name);
+				hotspots.set("Cost",cost);
+				hotspots.set("Location",point);
+				hotspots.set("Address",address);
+				hotspots.set("Bandwidth",bandwidth);
+				hotspots.set("Test1",x);
+				hotspots.set("Test2",y);
+				
+				hotspots.save(null,{
 					success: function(hotspots){
 						alert("Data stored successfully on Wi-Find");
 					},
@@ -63,10 +105,6 @@
 						alert("Failed to save information on Wi-Find");
 					}
 				});
-				} else {  
-					alert("Geocode was not successful for the following reason: " + status);  
-				}  
-				}); 
 			}  
 			
 			function verifyEmail(email)
