@@ -22,7 +22,7 @@
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
 		</script>
 		<script type="text/javascript">  
-			
+		
 			var geocoder;
 			
 			function initialize() {  
@@ -62,12 +62,10 @@
 				
 					var Hotspots = Parse.Object.extend("Hotspots");
 					var hotspots=new Hotspots();
-
-					
+		
 					var Users = Parse.Object.extend("Users");
 					var users=new Users();
 
-				
 					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
 
 					hotspots.set("Name",name);
@@ -99,26 +97,8 @@
 
 					} else {  
 						alert("Geocode was not successful for the following reason: " + status);  
-					}
-					
+					}			
 				});
-				
-				
-					
-
-				
-			 /* function codeAddress() {  
-			    var address = document.getElementById("address").value;  
-			    geocoder.geocode( { 'address': address}, function(results, status) {  
-			      if (status == google.maps.GeocoderStatus.OK) {  
-			        alert(results[0].geometry.location);  
-			      } else {  
-			        alert("Geocode was not successful for the following reason: " + status);  
-			      }  
-			    });  
-			  }*/
-			  
-				
 			}  
 			
 			function verifyEmail(email)
@@ -172,7 +152,7 @@
 					</div>
 			    	
 					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a"/>  
-					
+	
 			    </form>
 			</div>
 			
