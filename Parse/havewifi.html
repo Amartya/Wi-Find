@@ -25,13 +25,7 @@
 		  
 			function mainFunction() {
 			
-				Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
-				
-				var Hotspots = Parse.Object.extend("Hotspots");
-				var hotspots=new Hotspots();
 				var point;
-				var x;
-				var y;
 			
 				//Getting the rest of the information from the form
 				var name=document.getElementById("Name").value;
@@ -54,10 +48,28 @@
 						
 				geocoder.geocode( { 'address': address}, function(results, status) {  
 				if (status == google.maps.GeocoderStatus.OK) {
+				
+					Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+				
+					var Hotspots = Parse.Object.extend("Hotspots");
+					var hotspots=new Hotspots();
+				
 					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
 
-					x = results[0].geometry.location.lat().toString();
- 					y = results[0].geometry.location.lng().toString();
+					hotspots.set("Name",name);
+					hotspots.set("Cost",cost);
+					hotspots.set("Location",point);
+					hotspots.set("Address",address);
+					hotspots.set("Bandwidth",bandwidth);
+					
+					hotspots.save(null,{
+						success: function(hotspots){
+						alert("Data stored successfully on Wi-Find");
+					},
+					error: function(hotspots,error){
+						alert("Failed to save information on Wi-Find");
+					}
+				});
 
 				} else {  
 					alert("Geocode was not successful for the following reason: " + status);  
@@ -75,22 +87,7 @@
 			    });  
 			  }*/
 			  
-				hotspots.set("Name",name);
-				hotspots.set("Cost",cost);
-				hotspots.set("Location",point);
-				hotspots.set("Address",address);
-				hotspots.set("Bandwidth",bandwidth);
-				hotspots.set("Test1",x);
-				hotspots.set("Test2",y);
 				
-				hotspots.save(null,{
-					success: function(hotspots){
-						alert("Data stored successfully on Wi-Find");
-					},
-					error: function(hotspots,error){
-						alert("Failed to save information on Wi-Find");
-					}
-				});
 			}  
 			
 			function verifyEmail(email)
