@@ -7,7 +7,12 @@
 		
 		<!-- CSS -->
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
-		
+		<style>
+			::-webkit-input-placeholder {
+	font-style: italic;
+	color: blue;
+}
+		</style>
 		<!-- Scripts -->
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
@@ -109,28 +114,28 @@
 				<form id="form1">
 					<div id="div1" data-role="fieldcontain">
 						<!--label for="Name">Name*</label-->		
-						<input id="Name" name="Name" type="text" value="" placeholder="Name" />
+						<input id="Name" name="Name" type="text" value="" placeholder="Name*" />
 					</div>
 					
 
 					<div id="div2" data-role="fieldcontain">
 						<!--label for="Cost" >Cost*</label-->		
-						<input id="Cost" name="Cost" type="text" placeholder="Cost"/>
+						<input id="Cost" name="Cost" type="text" placeholder="Cost*"/>
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
 						<!--label for="Address">Street Address*</label-->		
-						<input id="Address" name="Address" type="text" value="" placeholder="enter street address and zip code"/>
+						<input id="Address" name="Address" type="text" value="" placeholder="enter street address and zip code*"/>
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
 						<!--label for="Email">Email*</label-->		
-						<input id="Email" name="Email" type="text" value="" placeholder="E-mail"/>
+						<input id="Email" name="Email" type="text" value="" placeholder="E-mail*"/>
 					</div>
 					
 					<div id="div4" data-role="fieldcontain">
 						<!--label for="Bandwidth">Bandwidth</label-->		
-						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth"/>
+						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth*"/>
 					</div>
 			    	
 					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a"/>  
