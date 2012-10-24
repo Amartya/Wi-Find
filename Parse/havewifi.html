@@ -9,6 +9,11 @@
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 		<link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" />
 		
+		<style>
+			::-webkit-input-placeholder {
+				color: #538DB9;
+		}
+		</style>
 		<!-- Scripts -->
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
@@ -34,6 +39,7 @@
 				var bandwidth=(document.getElementById("Bandwidth").value)*1;
 				var email=(document.getElementById("Email").value);
 				var address=(document.getElementById("Address").value);
+				var phone=(document.getElementById("Phone").value);
 				
 				/* Input Validation */
 				/*if(name==""||cost==""||email==""||address==""||zipcode=="")
@@ -54,6 +60,11 @@
 				
 					var Hotspots = Parse.Object.extend("Hotspots");
 					var hotspots=new Hotspots();
+
+					
+					var Users = Parse.Object.extend("Users");
+					var users=new Users();
+
 				
 					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
 
@@ -62,20 +73,37 @@
 					hotspots.set("Location",point);
 					hotspots.set("Address",address);
 					hotspots.set("Bandwidth",bandwidth);
+
+					users.set("Phone",phone);
+					users.set("Email",email);
+
+					users.save(null,{
+						success: function(users){
+						alert("User data stored successfully on Wi-Find");
+					},
+					error: function(users,error){
+						alert("Failed to save user data on Wi-Find");
+					}
+					});
 					
 					hotspots.save(null,{
 						success: function(hotspots){
-						alert("Data stored successfully on Wi-Find");
+						alert("Hotspot data stored successfully on Wi-Find");
 					},
 					error: function(hotspots,error){
-						alert("Failed to save information on Wi-Find");
+						alert("Failed to save Hotspot information on Wi-Find");
 					}
-				});
+					});
 
-				} else {  
-					alert("Geocode was not successful for the following reason: " + status);  
-				}  
+					} else {  
+						alert("Geocode was not successful for the following reason: " + status);  
+					}
+					
 				});
+				
+				
+					
+
 				
 			 /* function codeAddress() {  
 			    var address = document.getElementById("address").value;  
@@ -126,7 +154,7 @@
 					<div id="div1" data-role="fieldcontain">
 						<input id="Name" name="Name" type="text" value="" placeholder="Name (required)"/><br><br>
 						<input id="Cost" name="Cost" type="text" placeholder="Asking Price (required)"/><br><br>
-						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth (required)"/>
+						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth"/>
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
@@ -136,9 +164,9 @@
 					</div>
 				
 					<h4>How can buyers reach you?</h4>
-					
 					<div id="div1" data-role="fieldcontain">	
 						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)"/>
+						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)"/>
 					</div>
 			    	
 					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a"/>  
