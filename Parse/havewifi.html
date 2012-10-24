@@ -33,6 +33,7 @@
 				var x;
 				var y;
 			
+				//Getting the rest of the information from the form
 				var name=document.getElementById("Name").value;
 				var cost=(document.getElementById("Cost").value)*1;
 				var bandwidth=(document.getElementById("Bandwidth").value)*1;
@@ -55,23 +56,13 @@
 				if (status == google.maps.GeocoderStatus.OK) {
 					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
 
-					alert(results[0].geometry.location.lat().toString());
- 					alert(results[0].geometry.location.lng().toString());
- 					
- 					x=results[0].geometry.location.lat().toString();
- 					y=results[0].geometry.location.lng().toString();
+					x = results[0].geometry.location.lat().toString();
+ 					y = results[0].geometry.location.lng().toString();
 
 				} else {  
 					alert("Geocode was not successful for the following reason: " + status);  
 				}  
-				}); 
-
-				//Getting the rest of the information from the form
-				var name=document.getElementById("Name").value;
-				var cost=(document.getElementById("Cost").value)*1;
-				var bandwidth=(document.getElementById("Bandwidth").value)*1;
-				var email=(document.getElementById("Email").value);
-				var address=(document.getElementById("Address").value);
+				});
 				
 			 /* function codeAddress() {  
 			    var address = document.getElementById("address").value;  
@@ -84,11 +75,6 @@
 			    });  
 			  }*/
 			  
-				//Store data in parse
-	        	Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
-			
-				var Hotspots = Parse.Object.extend("Hotspots");
-				var hotspots=new Hotspots();
 				hotspots.set("Name",name);
 				hotspots.set("Cost",cost);
 				hotspots.set("Location",point);
