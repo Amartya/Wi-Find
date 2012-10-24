@@ -7,6 +7,7 @@
 		
 		<!-- CSS -->
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+		<link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" />
 		
 		<!-- Scripts -->
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
@@ -96,6 +97,18 @@
 				email_Flag = reg.test(email);
 				return email_Flag;
 			}
+			
+			function showhidefield()
+				  {
+					  if (document.getElementById("checkbox-1").checked)
+				    {
+				      document.getElementById("Address").style.display = "none";
+				    }
+				    else
+				    {
+ 				      document.getElementById("Address").style.display = "block";
+ 				    }
+				  }
 
 		</script>  
 	</head>  
@@ -107,30 +120,25 @@
 			
 			<div data-role="content" id="contentMain" name="contentMain">	
 				<form id="form1">
+				
+					<h4>Tell us about your hotspot.</h4>
+				
 					<div id="div1" data-role="fieldcontain">
-						<label for="Name">Name*</label>		
-						<input id="Name" name="Name" type="text" value=""/>
-					</div>
-					
-
-					<div id="div2" data-role="fieldcontain">
-						<label for="Cost" >Cost*</label>		
-						<input id="Cost" name="Cost" type="text" />
+						<input id="Name" name="Name" type="text" value="" placeholder="Name (required)"/><br><br>
+						<input id="Cost" name="Cost" type="text" placeholder="Asking Price (required)"/><br><br>
+						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth (required)"/>
 					</div>
 					
 					<div id="div1" data-role="fieldcontain">
-						<label for="Address">Street Address*</label>		
-						<input id="Address" name="Address" type="text" value=""/>
+						<input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" onclick="showhidefield()"/>
+						<label for="checkbox-1">Use my current location!</label>						
+						<input id="Address" name="Address" type="text" value="" placeholder="Enter your street and zipcode (required)" style="display:block" />
 					</div>
+				
+					<h4>How can buyers reach you?</h4>
 					
-					<div id="div1" data-role="fieldcontain">
-						<label for="Email">Email*</label>		
-						<input id="Email" name="Email" type="text" value=""/>
-					</div>
-					
-					<div id="div4" data-role="fieldcontain">
-						<label for="Bandwidth">Bandwidth</label>		
-						<input id="Bandwidth" name="Bandwidth" type="text" />
+					<div id="div1" data-role="fieldcontain">	
+						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)"/>
 					</div>
 			    	
 					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a"/>  
