@@ -22,7 +22,7 @@
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
 		</script>
 		<script type="text/javascript">  
-			
+		
 			var geocoder;
 /* 			var gotLocation; */
 			
@@ -83,6 +83,9 @@ var curLat = position.coords.latitude;
 					var Users = Parse.Object.extend("Users");
 					var users=new Users();
 				
+					var Users = Parse.Object.extend("Users");
+					var users=new Users();
+
 					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
 /* 					locatedPoint = new Parse.GeoPoint({latitude: curLat, longitude: curLong}); */
 
@@ -121,10 +124,9 @@ if(gotLocation==true) {
 
 					} else {  
 						alert("Geocode was not successful for the following reason: " + status);  
-					}
-					
+					}			
 				});
-
+				
 			 /* function codeAddress() {  
 			    var address = document.getElementById("address").value;  
 			    geocoder.geocode( { 'address': address}, function(results, status) {  
@@ -136,7 +138,6 @@ if(gotLocation==true) {
 			    });  
 			  }*/
 			  
-				
 			}  
 
 /*
@@ -198,7 +199,7 @@ if(gotLocation==true) {
 					</div>
 			    	
 					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a"/>  
-					
+	
 			    </form>
 			</div>
 			
