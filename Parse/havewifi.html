@@ -24,15 +24,32 @@
 		<script type="text/javascript">  
 			
 			var geocoder;
+/* 			var gotLocation; */
 			
 			function initialize() {  
 				geocoder = new google.maps.Geocoder();  
 				document.getElementById("Name").focus();
+				/*
+if(navigator.geolocation)
+		        {
+		          navigator.geolocation.getCurrentPosition(mainFunction,errorFunction);
+		          gotLocation = true;
+		        }
+		        else{
+		          alert('Error: No location');
+		        }
+*/
 			}  
 		  
 			function mainFunction() {
+/* 			function mainFunction(position) { */
 			
 				var point;
+/* 				var locatedPoint; */
+				/*
+var curLat = position.coords.latitude;
+				var curLong = position.coords.longitude;
+*/
 			
 				//Getting the rest of the information from the form
 				var name=document.getElementById("Name").value;
@@ -62,22 +79,27 @@
 				
 					var Hotspots = Parse.Object.extend("Hotspots");
 					var hotspots=new Hotspots();
-
 					
 					var Users = Parse.Object.extend("Users");
 					var users=new Users();
-
 				
 					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
+/* 					locatedPoint = new Parse.GeoPoint({latitude: curLat, longitude: curLong}); */
 
 					hotspots.set("Name",name);
 					hotspots.set("Cost",cost);
+					/*
+if(gotLocation==true) {
+						hotspots.set("Location",locatedPoint);
+					}
+*/
 					hotspots.set("Location",point);
 					hotspots.set("Address",address);
 					hotspots.set("Bandwidth",bandwidth);
-
-					users.set("Phone",phone);
-					users.set("Email",email);
+					
+					users.set("phone",phone);
+					users.set("email",email);
+					users.set("parent",hotspots);
 
 					users.save(null,{
 						success: function(users){
@@ -102,11 +124,7 @@
 					}
 					
 				});
-				
-				
-					
 
-				
 			 /* function codeAddress() {  
 			    var address = document.getElementById("address").value;  
 			    geocoder.geocode( { 'address': address}, function(results, status) {  
@@ -120,6 +138,14 @@
 			  
 				
 			}  
+
+/*
+		    function errorFunction()
+		    {
+		        alert('Browser does not support location data');
+		        gotLocation = false;
+		    }
+*/
 			
 			function verifyEmail(email)
 			{
@@ -129,17 +155,16 @@
 			}
 			
 			function showhidefield()
-				  {
-					  if (document.getElementById("checkbox-1").checked)
-				    {
-				      document.getElementById("Address").style.display = "none";
-				    }
-				    else
-				    {
- 				      document.getElementById("Address").style.display = "block";
- 				    }
-				  }
-
+			{
+				if (document.getElementById("checkbox-1").checked)
+			    {
+			    	document.getElementById("Address").style.display = "none";
+			    }
+			    else
+			    {
+					document.getElementById("Address").style.display = "block";
+				}
+			}
 		</script>  
 	</head>  
 	<body onload="initialize()"> 
@@ -166,6 +191,7 @@
 					</div>
 				
 					<h4>How can buyers reach you?</h4>
+					
 					<div id="div1" data-role="fieldcontain">	
 						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)"/>
 						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)"/>
