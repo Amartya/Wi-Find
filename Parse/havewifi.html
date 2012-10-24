@@ -27,6 +27,7 @@
 			
 			function initialize() {  
 				geocoder = new google.maps.Geocoder();  
+				document.getElementById("Name").focus();
 			}  
 		  
 			function mainFunction() {
@@ -42,12 +43,13 @@
 				var phone=(document.getElementById("Phone").value);
 				
 				/* Input Validation */
-				/*if(name==""||cost==""||email==""||address==""||zipcode=="")
+				/*if(name==""||cost==""||email==""||address=="")
 					{
 						alert("Please fill out all of the required information.");
+						document.getElementById("Name").focus();
 						return;
 					}		
-				if(!verfifyEmail(email))
+				if(!verifyEmail(email))
 				{
 					alert("Please enter a valid email address.");
 					return;
