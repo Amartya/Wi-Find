@@ -1,19 +1,14 @@
 <!DOCTYPE html>  
-<html>  
-	<head>  
+<html>
+	<head>
+		<title>Share Wi-Fi</title>  
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>  
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>  	
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 		
 		<!-- CSS -->
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
-		<link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" />
-		
-		<style>
-			::-webkit-input-placeholder {
-				color: #538DB9;
-		}
-		</style>
+		<!--<link type="text/css" rel="stylesheet" href="css/styles.css" media="screen" /> !-->
 		<!-- Scripts -->
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
@@ -22,41 +17,30 @@
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
 		</script>
 		<script type="text/javascript">  
-		
+			//For geocoding address given by user
 			var geocoder;
-/* 			var gotLocation; */
+
+			//For storing current location
+			var curLat;
+         	var curLong;
+         	var gotLocation = false;
+
+			//point stores the lat. and long. of Wi-Fi
+			var point;	
+			var address;
 			
 			function initialize() {  
 				geocoder = new google.maps.Geocoder();  
 				document.getElementById("Name").focus();
-				/*
-if(navigator.geolocation)
-		        {
-		          navigator.geolocation.getCurrentPosition(mainFunction,errorFunction);
-		          gotLocation = true;
-		        }
-		        else{
-		          alert('Error: No location');
-		        }
-*/
 			}  
 		  
-			function mainFunction() {
-/* 			function mainFunction(position) { */
-			
-				var point;
-/* 				var locatedPoint; */
-				/*
-var curLat = position.coords.latitude;
-				var curLong = position.coords.longitude;
-*/
-			
+			function mainFunction() {	
+
 				//Getting the rest of the information from the form
 				var name=document.getElementById("Name").value;
 				var cost=(document.getElementById("Cost").value)*1;
 				var bandwidth=(document.getElementById("Bandwidth").value)*1;
 				var email=(document.getElementById("Email").value);
-				var address=(document.getElementById("Address").value);
 				var phone=(document.getElementById("Phone").value);
 				
 				/* Input Validation */
@@ -71,138 +55,187 @@ var curLat = position.coords.latitude;
 					alert("Please enter a valid email address.");
 					return;
 				}*/
-						
-				geocoder.geocode( { 'address': address}, function(results, status) {  
-				if (status == google.maps.GeocoderStatus.OK) {
-				
-					Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
-				
-					var Hotspots = Parse.Object.extend("Hotspots");
-					var hotspots=new Hotspots();
-					
-					var Users = Parse.Object.extend("Users");
-					var users=new Users();
-				
-					var Users = Parse.Object.extend("Users");
-					var users=new Users();
+				//Initialize Parse
+				Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
 
-					point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
-/* 					locatedPoint = new Parse.GeoPoint({latitude: curLat, longitude: curLong}); */
+				var Hotspots = Parse.Object.extend("Hotspots");
+				var hotspots = new Hotspots();
+				
+				var Users = Parse.Object.extend("Users");
+				var users = new Users();				
 
+				if(!gotLocation){
+					//Only get the address from the form if current location has not been selected
+					window.address = (document.getElementById("Address").value);
+					//Here we get the address and then return the latitude and longitude
+					geocoder.geocode({ 'address': address}, function(results, status) {  
+						if (status == google.maps.GeocoderStatus.OK) {
+							point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
+						}
+						else {  
+							alert("Geocode was not successful for the following reason: " + status);  
+						}	
+					});
+				}
+
+				if(window.address != null){
+					//Setting data to Hotspot object
 					hotspots.set("Name",name);
 					hotspots.set("Cost",cost);
-					/*
-if(gotLocation==true) {
-						hotspots.set("Location",locatedPoint);
-					}
-*/
 					hotspots.set("Location",point);
-					hotspots.set("Address",address);
+					hotspots.set("Address",window.address);
 					hotspots.set("Bandwidth",bandwidth);
 					
+					//Setting data to Users object
 					users.set("phone",phone);
 					users.set("email",email);
 					users.set("parent",hotspots);
 
+					//Saving to Users table
 					users.save(null,{
 						success: function(users){
-						alert("User data stored successfully on Wi-Find");
+							//alert("Data saved successfully on Wi-Find"); //should change these to jquery alerts.
 					},
-					error: function(users,error){
-						alert("Failed to save user data on Wi-Find");
-					}
+						error: function(users,error){
+							alert("Could not save data on Wi-Find");
+						}
 					});
-					
+						
+					//Saving to Hotspot table
 					hotspots.save(null,{
 						success: function(hotspots){
-						alert("Hotspot data stored successfully on Wi-Find");
-					},
-					error: function(hotspots,error){
-						alert("Failed to save Hotspot information on Wi-Find");
-					}
+							alert("Data saved successfully on Wi-Find"); //should change these to jquery alerts.
+						},
+						error: function(hotspots,error){
+							alert("Could not save data on Wi-Find");
+						}
 					});
+				}
+			}
 
-					} else {  
-						alert("Geocode was not successful for the following reason: " + status);  
-					}			
-				});
-				
-			 /* function codeAddress() {  
-			    var address = document.getElementById("address").value;  
-			    geocoder.geocode( { 'address': address}, function(results, status) {  
-			      if (status == google.maps.GeocoderStatus.OK) {  
-			        alert(results[0].geometry.location);  
-			      } else {  
-			        alert("Geocode was not successful for the following reason: " + status);  
-			      }  
-			    });  
-			  }*/
-			  
-			}  
+			function checkAddress(){
 
-/*
-		    function errorFunction()
-		    {
-		        alert('Browser does not support location data');
-		        gotLocation = false;
-		    }
-*/
-			
-			function verifyEmail(email)
-			{
+			}
+
+			function verifyEmail(email){
 				var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
 				email_Flag = reg.test(email);
 				return email_Flag;
 			}
-			
-			function showhidefield()
-			{
-				if (document.getElementById("checkbox-1").checked)
-			    {
-			    	document.getElementById("Address").style.display = "none";
-			    }
-			    else
-			    {
-					document.getElementById("Address").style.display = "block";
+
+			$(document).ready(function() {
+				$("#usrCurLoc").change(function() {
+				    state = $("#usrCurLoc").val();
+				    if(state.toString()=="off"){
+				    	document.getElementById("Address").style.display = "block";
+				    }
+				    else
+				    {	
+				    	$.fn.getCurrentLocation();
+				    	document.getElementById("Address").style.display = "none";
+				    }
+				});
+			});
+
+
+			$.fn.getCurrentLocation = function(){
+	          	if(navigator.geolocation)
+	          	{
+	            	navigator.geolocation.getCurrentPosition(successLoc,errorLoc);
+	            }
+	         	else{
+		            alert("Couldn't get location information");
+		            document.getElementById("Address").style.display = "block";
+	          	}
+	      	}
+
+    		function successLoc(position){
+            	curLat = position.coords.latitude;
+        		curLong = position.coords.longitude;
+        		gotLocation = true;
+        		locationLookup();
+        	}
+
+        	function errorLoc(){
+				//Get user location from I.P.address.
+				if (google.loader.ClientLocation != null) {
+				  curLat = google.loader.ClientLocation.latitude;
+				  curLong = google.loader.ClientLocation.longitude;
+				} 
+				else {
+				  curLat = 42.0411;
+				  curLong = -87.6901;
 				}
-			}
+				gotLocation = true;
+        	}
+
+        	//Reverse geocoding. Doing it here to ensure that the asynchronous data fetching happens successfully
+        	function locationLookup(){
+        		//This is reverse geo-coding, we convert the current location to an address
+				var latlng = new google.maps.LatLng(curLat, curLong);
+				geocoder.geocode({'latLng': latlng}, function(results, status) {  
+					if (status == google.maps.GeocoderStatus.OK) {
+						address = results[0].formatted_address;
+					}
+					else {  
+						alert("Could not convert location to address");  
+					}	
+
+				});
+				point = new Parse.GeoPoint({latitude:curLat,longitude:curLong});
+        	}
+
 		</script>  
 	</head>  
 	<body onload="initialize()"> 
-		<div data-role="page" data-theme="b" id="page1" data-theme="a" >
+		<div data-role="page" id="page1"  data-theme="b">
 			<div data-role="header" data-theme="a" style="height:35px;">
 				<h1>Share Wi-Fi</h1>
 			</div><!-- /header -->
 			
 			<div data-role="content" id="contentMain" name="contentMain">	
-				<form id="form1">
+				<form id="wifi_form">
 				
 					<h4>Tell us about your hotspot.</h4>
 				
-					<div id="div1" data-role="fieldcontain">
-						<input id="Name" name="Name" type="text" value="" placeholder="Name (required)"/><br><br>
-						<input id="Cost" name="Cost" type="text" placeholder="Asking Price (required)"/><br><br>
-						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth"/>
+					<div id="details" data-role="fieldcontain">
+						<label for="Name" class="ui-hidden-accessible">Name:</label>
+						<input id="Name" name="Name" type="text" value="" placeholder="Wi-Fi Name (required)" data-mini="true"/><br><br>
+
+						<label for="Cost" class="ui-hidden-accessible">Cost:</label>
+						<input id="Cost" name="Cost" type="text" placeholder="Asking Price (required)" data-mini="true"/><br><br>
+
+						<label for="Bandwidth" class="ui-hidden-accessible">Bandwidth:</label>
+						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth" data-mini="true"/>
+					</div>			
+
+
+					<div id="location" data-role="fieldcontain" data-theme="b">
+						<label for="usrCurLoc"><b>Use current location:</b></label>
+						<select name="usrCurLoc" id="usrCurLoc" data-mini="true" data-role="slider" data-theme="c" data-track-theme="a">
+					        <option value="off">No</option>
+					        <option value="on">Yes</option>
+					    </select>
+
+					    <label for="Address" class="ui-hidden-accessible">Address:</label>
+					    <input id="Address" name="Address" type="text" value="" placeholder="Enter your street and zipcode (required)" data-mini="true"/>
 					</div>
-					
-					<div id="div1" data-role="fieldcontain">
-						<input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" onclick="showhidefield()"/>
-						<label for="checkbox-1">Use my current location!</label>						
-						<input id="Address" name="Address" type="text" value="" placeholder="Enter your street and zipcode (required)" style="display:block" />
-					</div>
-				
+
 					<h4>How can buyers reach you?</h4>
 					
-					<div id="div1" data-role="fieldcontain">	
-						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)"/>
-						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)"/>
+					<div id="contact" data-role="fieldcontain">	
+						<label for="Email" class="ui-hidden-accessible">Email:</label>
+						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/>
+
+						<label for="Phone" class="ui-hidden-accessible">Phone:</label>
+						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/>
 					</div>
 			    	
-					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a"/>  
+					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a" data-mini="true"/>  	
 	
 			    </form>
 			</div>
-			
+
 			<div class="footer" data-role="footer" data-theme="a" >
 			&copy; 2012 Wi-Find Alpha.
 			</div><!-- /footer -->
