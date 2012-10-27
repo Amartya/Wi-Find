@@ -12,28 +12,47 @@
 		<!-- Scripts -->
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
 		<script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
 		<script type="text/javascript"
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
+		</script>
+		<script>
+			$(document).ready(function() {
+					//Basic validation for each form element.
+					$('#remove-wifi-form').validate({
+				        'rules':{
+				          	'Name':'required',
+				          	'Email':{
+				            'required':true,
+				            'email':true
+				          	},
+					        'Year':{
+					        'required':true,
+					        'minlength':4
+				          	}
+			          	}	
+			      	});
+				});
 		</script>
 	</head>  
 	<body onload="initialize()"> 
 		<div data-role="page" id="page1"  data-theme="b">
 			<div data-role="header" data-theme="a" style="height:35px;">
-				<h1>Share Wi-Fi</h1>
+				<h1>Remove Wi-Fi</h1>
 			</div><!-- /header -->
 			
 			<div data-role="content" id="contentMain" name="contentMain">	
-				<form id="wifi_form">
+				<form id="remove-wifi-form">
 				
 					<h4>Remove your listing from Wi-Find</h4>
 				
 					<div id="details" data-role="fieldcontain">
 						<label for="Name" class="ui-hidden-accessible">Name:</label>
-						<input id="Name" name="Name" type="text" value="" placeholder="Wi-Fi Name (required)" data-mini="true"/><br><br>
+						<input id="Name" name="Name" type="text" value="" placeholder="Wi-Fi Name (required)" data-mini="true"/><br>
 
-						<label for="Email" class="ui-hidden-accessible">Email:</label>
-						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/>
+						<label for="Year" class="ui-hidden-accessible">Email:</label>
+						<input id="Year" name="Year" type="text" value="" placeholder="Year (required)" data-mini="true"/>
 					</div>			
 
 					<input type="button" value="Remove" data-theme="a" data-mini="true" />  

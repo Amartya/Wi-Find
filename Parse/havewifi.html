@@ -12,6 +12,7 @@
 		<!-- Scripts -->
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
 		<script src="http://www.parsecdn.com/js/parse-1.1.5.min.js"></script>
 		<script type="text/javascript"
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
@@ -117,12 +118,6 @@
 
 			}
 
-			function verifyEmail(email){
-				var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
-				email_Flag = reg.test(email);
-				return email_Flag;
-			}
-
 			$(document).ready(function() {
 				$("#usrCurLoc").change(function() {
 				    state = $("#usrCurLoc").val();
@@ -135,6 +130,27 @@
 				    	document.getElementById("Address").style.display = "none";
 				    }
 				});
+
+				//Basic validation for each form element.
+				$('#wifi-form').validate({
+			        'rules':{
+			          	'Name':'required',
+			          	'Email':{
+			            'required':true,
+			            'email':true
+			          	},
+				        'Cost':{
+				        'required':true,
+			          	}
+			          	'Address':{
+			            'required':true,
+			          	},
+				        'Year':{
+				        'required':true,
+				        'minlength':4
+			          	}
+		          	}	
+		      	});
 			});
 
 
@@ -194,16 +210,16 @@
 			</div><!-- /header -->
 			
 			<div data-role="content" id="contentMain" name="contentMain">	
-				<form id="wifi_form">
-				
-					<h4>Tell us about your hotspot.</h4>
+				<form id="wifi-form">
 				
 					<div id="details" data-role="fieldcontain">
+						<h4 >Tell us about your hotspot.</h4>
+
 						<label for="Name" class="ui-hidden-accessible">Name:</label>
-						<input id="Name" name="Name" type="text" value="" placeholder="Wi-Fi Name (required)" data-mini="true"/><br><br>
+						<input id="Name" name="Name" type="text" value="" placeholder="Wi-Fi Name (required)" data-mini="true"/><br>
 
 						<label for="Cost" class="ui-hidden-accessible">Cost:</label>
-						<input id="Cost" name="Cost" type="text" placeholder="Asking Price (required)" data-mini="true"/><br><br>
+						<input id="Cost" name="Cost" type="text" placeholder="Asking Price (required)" data-mini="true"/><br>
 
 						<label for="Bandwidth" class="ui-hidden-accessible">Bandwidth:</label>
 						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth" data-mini="true"/>
@@ -211,8 +227,8 @@
 
 
 					<div id="location" data-role="fieldcontain" data-theme="b">
-						<label for="usrCurLoc"><b>Use current location:</b></label>
-						<select name="usrCurLoc" id="usrCurLoc" data-mini="true" data-role="slider" data-theme="c" data-track-theme="a">
+						<label for="UsrCurLoc"><b>Use current location:</b></label>
+						<select name="UsrCurLoc" id="usrCurLoc" data-mini="true" data-role="slider" data-theme="c" data-track-theme="a">
 					        <option value="off">No</option>
 					        <option value="on">Yes</option>
 					    </select>
@@ -220,15 +236,20 @@
 					    <label for="Address" class="ui-hidden-accessible">Address:</label>
 					    <input id="Address" name="Address" type="text" value="" placeholder="Enter your street and zipcode (required)" data-mini="true"/>
 					</div>
-
-					<h4>How can buyers reach you?</h4>
 					
 					<div id="contact" data-role="fieldcontain">	
+						<h4 style="font-size:16px;">How can buyers reach you?</h4>
+
 						<label for="Email" class="ui-hidden-accessible">Email:</label>
-						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/>
+						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/><br>
 
 						<label for="Phone" class="ui-hidden-accessible">Phone:</label>
-						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/>
+						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/><br>
+
+						<label for="Year" class="ui-hidden-accessible">Phone:</label>
+						<input id="Year" name="Year" type="text" value="" placeholder="Your year of birth (required)" data-mini="true"/>
+						<label for="Year" style="font-size:12px;"><b>*You'll need this to remove your listing</b></label>
+
 					</div>
 			    	
 					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a" data-mini="true"/>  	
