@@ -30,52 +30,58 @@
 			var point;	
 			var address;
 			
+			var Hotspots;
+			var hotspots;
+
 			function initialize() {  
 				geocoder = new google.maps.Geocoder();  
 				document.getElementById("Name").focus();
-			}  
-		  
-			function mainFunction() {	
-
-				//Getting the rest of the information from the form
-				var name=document.getElementById("Name").value;
-				var cost=(document.getElementById("Cost").value)*1;
-				var bandwidth=(document.getElementById("Bandwidth").value)*1;
-				var email=(document.getElementById("Email").value);
-				var phone=(document.getElementById("Phone").value);
-				var yob=(document.getElementById("Year").value)*1;
-				
-				//Initialize Parse
+								//Initialize Parse
 				Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
 
-				var Hotspots = Parse.Object.extend("Hotspots");
-				var hotspots = new Hotspots();
-						
+				Hotspots = Parse.Object.extend("Hotspots");
+				hotspots = new Hotspots();
+			}  
+		  
+			function mainFunction() {			
+		
 				if(!gotLocation){
 					//Only get the address from the form if current location has not been selected
 					window.address = (document.getElementById("Address").value);
 					//Here we get the address and then return the latitude and longitude
 					geocoder.geocode({ 'address': address}, function(results, status) {  
 						if (status == google.maps.GeocoderStatus.OK) {
-							point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
+							window.point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
+							saveHotspot();
 						}
 						else {  
 							alert("Geocode was not successful for the following reason: " + status);  
 						}	
 					});
 				}
+				else{
+					saveHotspot();
+				}	
+			}
 
-				if(window.address != null){
+			function saveHotspot(){
+				 //Getting the rest of the information from the form
+					var name=document.getElementById("Name").value;
+					var cost=(document.getElementById("Cost").value)*1;
+					var bandwidth=(document.getElementById("Bandwidth").value)*1;
+					var email=(document.getElementById("Email").value);
+					var phone=(document.getElementById("Phone").value);
+					var yob=(document.getElementById("Year").value)*1;
+				
 					//Setting data to Hotspot object
 					hotspots.set("Name",name);
 					hotspots.set("Cost",cost);
-					hotspots.set("Location",point);
+					hotspots.set("Location",window.point);
 					hotspots.set("Address",window.address);
 					hotspots.set("Bandwidth",bandwidth);
 					hotspots.set("Phone",phone);
 					hotspots.set("Email",email);
 					hotspots.set("YOB",yob);
-
 					//Saving to Hotspot table
 					hotspots.save(null,{
 						success: function(hotspots){
@@ -85,11 +91,6 @@
 							alert("Could not save data on Wi-Find");
 						}
 					});
-				}
-			}
-
-			function checkAddress(){
-
 			}
 
 			$(document).ready(function() {
