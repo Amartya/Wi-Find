@@ -43,28 +43,14 @@
 				var bandwidth=(document.getElementById("Bandwidth").value)*1;
 				var email=(document.getElementById("Email").value);
 				var phone=(document.getElementById("Phone").value);
+				var yob=(document.getElementById("Year").value)*1;
 				
-				/* Input Validation */
-				/*if(name==""||cost==""||email==""||address=="")
-					{
-						alert("Please fill out all of the required information.");
-						document.getElementById("Name").focus();
-						return;
-					}		
-				if(!verifyEmail(email))
-				{
-					alert("Please enter a valid email address.");
-					return;
-				}*/
 				//Initialize Parse
 				Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
 
 				var Hotspots = Parse.Object.extend("Hotspots");
 				var hotspots = new Hotspots();
-				
-				var Users = Parse.Object.extend("Users");
-				var users = new Users();				
-
+						
 				if(!gotLocation){
 					//Only get the address from the form if current location has not been selected
 					window.address = (document.getElementById("Address").value);
@@ -86,22 +72,10 @@
 					hotspots.set("Location",point);
 					hotspots.set("Address",window.address);
 					hotspots.set("Bandwidth",bandwidth);
-					
-					//Setting data to Users object
-					users.set("phone",phone);
-					users.set("email",email);
-					users.set("parent",hotspots);
+					hotspots.set("Phone",phone);
+					hotspots.set("Email",email);
+					hotspots.set("YOB",yob);
 
-					//Saving to Users table
-					users.save(null,{
-						success: function(users){
-							//alert("Data saved successfully on Wi-Find"); //should change these to jquery alerts.
-					},
-						error: function(users,error){
-							alert("Could not save data on Wi-Find");
-						}
-					});
-						
 					//Saving to Hotspot table
 					hotspots.save(null,{
 						success: function(hotspots){
@@ -147,12 +121,12 @@
 			          	},
 				        'Year':{
 				        'required':true,
-				        'minlength':4
+				        'minlength':4,
+				        'maxlength':4
 			          	}
 		          	}	
 		      	});
 			});
-
 
 			$.fn.getCurrentLocation = function(){
 	          	if(navigator.geolocation)
@@ -219,7 +193,7 @@
 						<input id="Name" name="Name" type="text" value="" placeholder="Wi-Fi Name (required)" data-mini="true"/><br>
 
 						<label for="Cost" class="ui-hidden-accessible">Cost:</label>
-						<input id="Cost" name="Cost" type="text" placeholder="Asking Price (required)" data-mini="true"/><br>
+						<input id="Cost" name="Cost" type="text" placeholder="Asking Price in $/month (required)" data-mini="true"/><br>
 
 						<label for="Bandwidth" class="ui-hidden-accessible">Bandwidth:</label>
 						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth" data-mini="true"/>
@@ -243,12 +217,13 @@
 						<label for="Email" class="ui-hidden-accessible">Email:</label>
 						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/><br>
 
-						<label for="Phone" class="ui-hidden-accessible">Phone:</label>
-						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/><br>
-
 						<label for="Year" class="ui-hidden-accessible">Phone:</label>
 						<input id="Year" name="Year" type="text" value="" placeholder="Your year of birth (required)" data-mini="true"/>
-						<label for="Year" style="font-size:12px;"><b>*You'll need this to remove your listing</b></label>
+						<label for="Year" style="font-size:12px;"><b>*You'll need this to remove your listing</b></label><br>
+
+						<label for="Phone" class="ui-hidden-accessible">Phone:</label>
+						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/>
+
 
 					</div>
 			    	

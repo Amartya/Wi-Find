@@ -67,8 +67,10 @@
                 var myLatLng = new google.maps.LatLng(results[resultCount].get("Location").latitude, results[resultCount].get("Location").longitude);
 
                 //Get bandwidth and name data for Wi-Fi location from Parse. Appending current email as well
-                 contentStringArr[resultCount] = "<b>" + "Bandwidth: " + "</b>" + results[resultCount].get("Bandwidth") + 
-                                                "<br>" + "<b>" + "Name: "+  "</b>" + results[resultCount].get("Name");
+                 contentStringArr[resultCount] = "<b>" + "Wi-Fi Name: " + "</b>" + results[resultCount].get("Name") + 
+                                                "<br>" + "<b>" + "Cost per month: "+  "</b> $" + results[resultCount].get("Cost")+
+                                                 "<br>" + "<b>" + "Mail: "+  "</b>" +  "<a href=\"mailto:"  + results[resultCount].get("Email")+ "\">E-mail</a>";
+
 
                 //Create markers for each result fetched from Parse
                 markers[resultCount] = new google.maps.Marker({
@@ -79,8 +81,6 @@
                   animation: google.maps.Animation.DROP,
                   title: results[resultCount].get("Name")
                 });
-
-                getEmail(results[resultCount].id, resultCount);
 
                 //Attaching event listeners to each marker
                 markerClickListener(markers[resultCount],resultCount);
@@ -93,25 +93,6 @@
             }
           });
         }//End of Initialize map.
-        
-        function getEmail(id,position){
-          //Setting up query for the Users table.
-          var userQuery = new Parse.Query(Users);
-
-          //Querying the Users table for matching ids and fetching email
-          userQuery.equalTo("HotspotId",id);
-          userQuery.find({
-                success: function(emails) {
-                    if(emails[0]!=null){
-                    contentStringArr[position] += "<br>" + "<b>" + "Mail: "+  "</b>" + 
-                                                  "<a href=\"mailto:" + emails[0].get("Email") + "\">E-mail</a>";
-                  }
-                },//End of User query for successful fetch
-                error: function(error) {
-                  // error is an instance of Parse.Error.
-                }
-          });
-        }
 
         function markerClickListener (marker, position){
             google.maps.event.addListener(marker, 'click', function() {
@@ -129,7 +110,6 @@
         function initialize() {
           Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
           Hotspots = Parse.Object.extend("Hotspots");
-          Users = Parse.Object.extend("Users");
 
           if(navigator.geolocation)
           {

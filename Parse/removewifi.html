@@ -18,6 +18,38 @@
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
 		</script>
 		<script>
+			var Hotspots;
+
+			function removeWifi(){
+				
+				var name=document.getElementById("Name").value;
+				var yob=(document.getElementById("Year").value)*1;
+				
+				var query= new Parse.Query(Hotspots);
+			
+				
+				query.equalTo("Name", name);
+				query.equalTo("YOB", yob);
+
+				query.first({
+  					success: function(userrecord) {
+				    	userrecord.destroy({
+				    		success: function(userrecord){
+				    			alert("Deleted");
+				    		},
+				    		error: function(userrecord,error){
+				    			alert(error);
+				    		}
+				    	});
+				  }
+				});
+			}
+
+
+        function initialize() {
+          Parse.initialize("w2QBbAohqDJLi4kE7tMP5oaca09vw63UgCo8OfMv", "EOfmgHdudoXYhuRtdjN7dpEPMg7CqE03YTzBcZRx");
+          Hotspots = Parse.Object.extend("Hotspots");
+        }
 			$(document).ready(function() {
 					//Basic validation for each form element.
 					$('#remove-wifi-form').validate({
@@ -34,6 +66,8 @@
 			          	}	
 			      	});
 				});
+
+
 		</script>
 	</head>  
 	<body onload="initialize()"> 
@@ -55,7 +89,7 @@
 						<input id="Year" name="Year" type="text" value="" placeholder="Year (required)" data-mini="true"/>
 					</div>			
 
-					<input type="button" value="Remove" data-theme="a" data-mini="true" />  
+					<input type="button" value="Remove" onclick = "removeWifi()" data-theme="a" data-mini="true" />  
 
 					<div id="popUpID" data-role="popup"> Test </div>	
 			    </form>
