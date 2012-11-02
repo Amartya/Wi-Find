@@ -17,6 +17,64 @@
 		<script type="text/javascript"
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBVYmtKrniJdpYFLa4-QMXaWYemedvw1bA&sensor=true">
 		</script>
+	</head>  
+	<body onload="initialize()"> 
+		<div data-role="page" id="page1"  data-theme="b">
+			<div data-role="header" data-theme="a" style="height:35px;">
+				<h1>Share Wi-Fi</h1>
+			</div><!-- /header -->
+			
+			<div data-role="content" id="contentMain" name="contentMain">	
+				<form id="wifi-form">
+				
+					<div id="details" data-role="fieldcontain">
+						<h4 >Tell us about your hotspot.</h4>
+
+						<label for="Name" class="ui-hidden-accessible">Name:</label>
+						<input id="Name" name="Name" type="text" value="" placeholder="Wi-Fi Name (required)" data-mini="true"/><br>
+
+						<label for="Cost" class="ui-hidden-accessible">Cost:</label>
+						<input id="Cost" name="Cost" type="text" placeholder="Asking Price in $/month (required)" data-mini="true"/><br>
+
+						<label for="Bandwidth" class="ui-hidden-accessible">Bandwidth:</label>
+						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth" data-mini="true"/>
+					</div>			
+
+
+					<div id="location" data-role="fieldcontain" data-theme="b">
+						<label for="UsrCurLoc"><b>Use current location:</b></label>
+						<select name="UsrCurLoc" id="usrCurLoc" data-mini="true" data-role="slider" data-theme="c" data-track-theme="a">
+					        <option value="off">No</option>
+					        <option value="on">Yes</option>
+					    </select>
+
+					    <label for="Address" class="ui-hidden-accessible">Address:</label>
+					    <input id="Address" name="Address" type="text" value="" placeholder="Enter your street and zipcode (required)" data-mini="true"/>
+					</div>
+					
+					<div id="contact" data-role="fieldcontain">	
+						<h4 style="font-size:16px;">How can buyers reach you?</h4>
+
+						<label for="Email" class="ui-hidden-accessible">Email:</label>
+						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/><br>
+
+						<label for="Year" class="ui-hidden-accessible">Phone:</label>
+						<input id="Year" name="Year" type="text" value="" placeholder="Your year of birth (required)" data-mini="true"/>
+						<label for="Year" style="font-size:12px;"><b>*You'll need this to remove your listing</b></label><br>
+
+						<label for="Phone" class="ui-hidden-accessible">Phone:</label>
+						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/>
+					</div>
+			    	
+					<a href="dialog.html" data-rel="dialog" data-transition="pop" type="button" value="Submit" onclick="mainFunction()" data-theme="a" data-mini="true"> Submit </a>  	
+	
+			    </form>
+			</div>
+
+			<div class="footer" data-role="footer" data-theme="a" >
+			&copy; 2012 Wi-Find Alpha.
+			</div><!-- /footer -->
+		</div>
 		<script type="text/javascript">  
 			//For geocoding address given by user
 			var geocoder;
@@ -54,9 +112,22 @@
 							window.point = new Parse.GeoPoint({latitude:results[0].geometry.location.lat(),longitude:results[0].geometry.location.lng()});
 							saveHotspot();
 						}
-						else {  
-							alert("Geocode was not successful for the following reason: " + status);  
-						}	
+						else if(status == google.maps.GeocoderStatus.ZERO_RESULTS){
+							var tempLat;
+							var tempLong;  	
+							if (google.loader.ClientLocation != null) {
+							  tempLat = google.loader.ClientLocation.latitude;
+							  tempLat = google.loader.ClientLocation.longitude;
+							} else {
+							  tempLat = 42.0411;
+							  tempLong = -87.6901;
+							}
+							window.point = new Parse.GeoPoint(tempLat,tempLong); 
+							saveHotspot();
+						}
+						else{
+							saveStatusLocally("Failure");
+						}
 					});
 				}
 				else{
@@ -85,10 +156,10 @@
 					//Saving to Hotspot table
 					hotspots.save(null,{
 						success: function(hotspots){
-							alert("Data saved successfully on Wi-Find"); //should change these to jquery alerts.
+							saveStatusLocally("Success");
 						},
 						error: function(hotspots,error){
-							alert("Could not save data on Wi-Find");
+							saveStatusLocally("Failure");
 						}
 					});
 			}
@@ -176,66 +247,10 @@
 				point = new Parse.GeoPoint({latitude:curLat,longitude:curLong});
         	}
 
+        	// save the string
+			function saveStatusLocally(txt) {
+			  window.localStorage.setItem("status", txt);
+			}
 		</script>  
-	</head>  
-	<body onload="initialize()"> 
-		<div data-role="page" id="page1"  data-theme="b">
-			<div data-role="header" data-theme="a" style="height:35px;">
-				<h1>Share Wi-Fi</h1>
-			</div><!-- /header -->
-			
-			<div data-role="content" id="contentMain" name="contentMain">	
-				<form id="wifi-form">
-				
-					<div id="details" data-role="fieldcontain">
-						<h4 >Tell us about your hotspot.</h4>
-
-						<label for="Name" class="ui-hidden-accessible">Name:</label>
-						<input id="Name" name="Name" type="text" value="" placeholder="Wi-Fi Name (required)" data-mini="true"/><br>
-
-						<label for="Cost" class="ui-hidden-accessible">Cost:</label>
-						<input id="Cost" name="Cost" type="text" placeholder="Asking Price in $/month (required)" data-mini="true"/><br>
-
-						<label for="Bandwidth" class="ui-hidden-accessible">Bandwidth:</label>
-						<input id="Bandwidth" name="Bandwidth" type="text" placeholder="Bandwidth" data-mini="true"/>
-					</div>			
-
-
-					<div id="location" data-role="fieldcontain" data-theme="b">
-						<label for="UsrCurLoc"><b>Use current location:</b></label>
-						<select name="UsrCurLoc" id="usrCurLoc" data-mini="true" data-role="slider" data-theme="c" data-track-theme="a">
-					        <option value="off">No</option>
-					        <option value="on">Yes</option>
-					    </select>
-
-					    <label for="Address" class="ui-hidden-accessible">Address:</label>
-					    <input id="Address" name="Address" type="text" value="" placeholder="Enter your street and zipcode (required)" data-mini="true"/>
-					</div>
-					
-					<div id="contact" data-role="fieldcontain">	
-						<h4 style="font-size:16px;">How can buyers reach you?</h4>
-
-						<label for="Email" class="ui-hidden-accessible">Email:</label>
-						<input id="Email" name="Email" type="text" value="" placeholder="Email (required)" data-mini="true"/><br>
-
-						<label for="Year" class="ui-hidden-accessible">Phone:</label>
-						<input id="Year" name="Year" type="text" value="" placeholder="Your year of birth (required)" data-mini="true"/>
-						<label for="Year" style="font-size:12px;"><b>*You'll need this to remove your listing</b></label><br>
-
-						<label for="Phone" class="ui-hidden-accessible">Phone:</label>
-						<input id="Phone" name="Phone" type="text" value="" placeholder="Phone Number (optional)" data-mini="true"/>
-
-
-					</div>
-			    	
-					<input type="button" value="Submit" onclick="mainFunction()" data-theme="a" data-mini="true"/>  	
-	
-			    </form>
-			</div>
-
-			<div class="footer" data-role="footer" data-theme="a" >
-			&copy; 2012 Wi-Find Alpha.
-			</div><!-- /footer -->
-		</div>
 	</body>
 </html>

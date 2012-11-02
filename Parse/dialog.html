@@ -1,0 +1,54 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/> 
+		<title>Wi-Find Confirmation</title> 
+		<link rel="stylesheet"  href="../../css/themes/default/jquery.mobile-1.2.0.css" />  
+		<link rel="stylesheet" href="../_assets/css/jqm-docs.css"/>
+		<script src="//code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+			
+		</script>
+	</head> 
+<body> 
+	<div id="Dialog" data-ajax="false">
+		<div data-role="content" data-theme="b" data-ajax="false">
+			<h1>Status</h1>
+			<b id='status'> </b>
+			<a href="index.html" data-role="button" data-theme="a" data-ajax="false">Go to Main Page</a>       
+			<a href="havewifi.html" data-role="button" data-rel="back" data-theme="c" data-ajax="false">Cancel</a>    
+		</div>
+	</div>
+	<script type="text/javascript">
+		(function() {
+		  var status = window.localStorage.getItem("status");
+		  $(document).ready(function() {
+		  	status = window.localStorage.getItem("status");
+		  	update();
+		  });
+
+		  function update() { 
+		  	//Check if null, only if it's not null does it make sense to check for string value
+			if(status){
+				if(status == "Success"){
+						document.getElementById('status').innerHTML = "Data saved successfully in Wi-Find";
+				}
+				else{
+						document.getElementById('status').innerHTML = "Unable to save data, try again";			
+				}
+			}
+			else{
+				status = window.localStorage.getItem("status");
+			}
+		    setTimeout(update, 50);     
+			}
+	  	})();	
+	</script>
+</body>
+</html>
+
+
+
+ 
+
